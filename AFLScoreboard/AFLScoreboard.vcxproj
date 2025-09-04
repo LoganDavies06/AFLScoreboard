@@ -24,6 +24,7 @@
     <ClCompile Include="LText.cpp" />
     <ClCompile Include="LTexture.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Structs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LButton.hpp" />

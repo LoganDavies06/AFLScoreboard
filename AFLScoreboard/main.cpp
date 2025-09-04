@@ -45,7 +45,7 @@ bool init(struct screenDimensions dim, struct Window* wn) {
 int main(int argc, char* args[]) {
     int exitCode{ 0 };
 
-    constexpr screenDimensions screenDim{ 640, 480 };
+    constexpr screenDimensions screenDim{ 1240, 290 };
     Window window;
 
     //initialize window
@@ -61,6 +61,8 @@ int main(int argc, char* args[]) {
         SDL_Event e;
         SDL_zero(e);
 
+        SDL_Color bgCol = getCol(colName::DARK_GREY);
+
         //main loop
         while (!quit) {
             while (SDL_PollEvent(&e)) {
@@ -70,7 +72,7 @@ int main(int argc, char* args[]) {
             }
 
             //set window background colour
-            SDL_SetRenderDrawColor(window.renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            SDL_SetRenderDrawColor(window.renderer, bgCol.r, bgCol.g, bgCol.b, bgCol.a);
             SDL_RenderClear(window.renderer);
 
             //refresh screen

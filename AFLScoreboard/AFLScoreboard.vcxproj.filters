@@ -30,6 +30,9 @@
     <ClCompile Include="LTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Structs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Structs.h">
