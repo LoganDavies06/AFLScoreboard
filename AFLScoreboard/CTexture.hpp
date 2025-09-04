@@ -9,28 +9,28 @@
 #include<SDL3_image/SDL_image.h>
 #include<string>
 
-class LTexture{
+class CTexture{
 public:
     static constexpr float kDefaultSize = -1.f;
 
     //Initializes texture variables
-    LTexture();
-    LTexture(float pX, float pY);
+    CTexture();
+    CTexture(float pX, float pY);
 
     //Cleans up texture variables
-    ~LTexture();
+    ~CTexture();
 
     //Remove copy constructor
-    LTexture( const LTexture& );
+    CTexture( const CTexture& );
 
     //Remove copy assignment
-    LTexture& operator=( const LTexture& ) = delete;
+    CTexture& operator=( const CTexture& ) = delete;
 
     //Remove move constructor
-    LTexture( LTexture&& ) = delete;
+    CTexture( CTexture&& ) = delete;
 
     //Remove move assignment
-    LTexture& operator=( LTexture&& ) = delete;
+    CTexture& operator=( CTexture&& ) = delete;
 
     //Loads texture from disk
     bool loadFromFile( std::string path, SDL_Renderer* gRenderer);

@@ -19,18 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LButton.cpp" />
-    <ClCompile Include="LRect.cpp" />
-    <ClCompile Include="LText.cpp" />
-    <ClCompile Include="LTexture.cpp" />
+    <ClCompile Include="CButton.cpp" />
+    <ClCompile Include="CRect.cpp" />
+    <ClCompile Include="CText.cpp" />
+    <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Structs.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LButton.hpp" />
-    <ClInclude Include="LRect.hpp" />
-    <ClInclude Include="LText.hpp" />
-    <ClInclude Include="LTexture.hpp" />
+    <ClInclude Include="CButton.hpp" />
+    <ClInclude Include="CRect.hpp" />
+    <ClInclude Include="CText.hpp" />
+    <ClInclude Include="CTexture.hpp" />
     <ClInclude Include="Structs.h" />
   </ItemGroup>
   <ItemGroup>

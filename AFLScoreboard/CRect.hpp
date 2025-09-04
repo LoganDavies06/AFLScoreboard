@@ -3,14 +3,14 @@
 #include"Structs.h"
 
 
-class LRect {
+class CRect {
 public:
 	//default constructor
-	LRect();
+	CRect();
 	//copy constructor
-	LRect(LRect& pRect);
+	CRect(CRect& pRect);
 	//constructor with parameters
-	LRect(float px, float py, float pw, float ph, SDL_Color& pFillCol);
+	CRect(float px, float py, float pw, float ph, SDL_Color& pFillCol);
 
 	//mutators
 	void setPosition(float px, float py, float pw, float ph);

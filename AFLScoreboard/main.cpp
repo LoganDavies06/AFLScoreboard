@@ -6,11 +6,11 @@
 #include<sstream>
 #include<iostream>
 
-#include"LTexture.hpp"
-#include"LText.hpp"
+#include"CTexture.hpp"
+#include"CText.hpp"
 #include"Structs.h"
-#include"LRect.hpp"
-#include"LButton.hpp"
+#include"CRect.hpp"
+#include"CButton.hpp"
 
 struct Window {
     SDL_Window* window{ nullptr };

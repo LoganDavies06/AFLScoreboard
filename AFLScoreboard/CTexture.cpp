@@ -1,11 +1,11 @@
-#include"LTexture.hpp"
+#include"CTexture.hpp"
 
 /*
  * Image class adapted from Lazy Foo Productions
  * https://lazyfoo.net/tutorials/SDL3/index.php#Textures%20and%20Extension%20Libraries
 */
 
-LTexture::LTexture():
+CTexture::CTexture():
     //Initialize texture variables
     mTexture{ nullptr },
     mWidth{ 0 },
@@ -14,7 +14,7 @@ LTexture::LTexture():
     y{0}
 {}
 
-LTexture::LTexture(float pX, float pY) :
+CTexture::CTexture(float pX, float pY) :
     //Initialize texture variables
     mTexture{ nullptr },
     mWidth{ 0 },
@@ -24,7 +24,7 @@ LTexture::LTexture(float pX, float pY) :
 {
 }
 
-LTexture::LTexture(const LTexture& pTexture) :
+CTexture::CTexture(const CTexture& pTexture) :
     mTexture{ pTexture.mTexture },
     mHeight{ pTexture.mHeight },
     mWidth{ pTexture.mWidth },
@@ -32,14 +32,14 @@ LTexture::LTexture(const LTexture& pTexture) :
     y{ pTexture.y }
 {}
 
-LTexture::~LTexture()
+CTexture::~CTexture()
 {
     //Clean up texture
     destroy();
 }
 
 //load without colour keying
-bool LTexture::loadFromFile( std::string path, SDL_Renderer* gRenderer )
+bool CTexture::loadFromFile( std::string path, SDL_Renderer* gRenderer )
 {
     //Clean up texture if it already exists
     destroy();
@@ -71,7 +71,7 @@ bool LTexture::loadFromFile( std::string path, SDL_Renderer* gRenderer )
     return mTexture != nullptr;
 }
 //load with colour keying
-bool LTexture::loadFromFile( std::string path, SDL_Renderer* gRenderer, int keyR, int keyG, int keyB )
+bool CTexture::loadFromFile( std::string path, SDL_Renderer* gRenderer, int keyR, int keyG, int keyB )
 {
     //Clean up texture if it already exists
     destroy();
@@ -109,7 +109,7 @@ bool LTexture::loadFromFile( std::string path, SDL_Renderer* gRenderer, int keyR
     return mTexture != nullptr;
 }
 
-void LTexture::destroy()
+void CTexture::destroy()
 {
     //Clean up texture
     SDL_DestroyTexture( mTexture );
@@ -118,29 +118,29 @@ void LTexture::destroy()
     mHeight = 0;
 }
 
-void LTexture::setPosition(float pX, float pY) {
+void CTexture::setPosition(float pX, float pY) {
     x = pX;
     y = pY;
 }
 
-void LTexture::setCentre(float pX, float pY) {
+void CTexture::setCentre(float pX, float pY) {
     x = pX - (float) mWidth/2;
     y = pY - (float) mHeight/2;
 }
 
-void LTexture::setColor( Uint8 r, Uint8 g, Uint8 b){
+void CTexture::setColor( Uint8 r, Uint8 g, Uint8 b){
     SDL_SetTextureColorMod( mTexture, r, g, b );
 }
 
-void LTexture::setAlpha( Uint8 alpha ){
+void CTexture::setAlpha( Uint8 alpha ){
     SDL_SetTextureAlphaMod( mTexture, alpha );
 }
 
-void LTexture::setBlending( SDL_BlendMode blendMode ){
+void CTexture::setBlending( SDL_BlendMode blendMode ){
     SDL_SetTextureBlendMode( mTexture, blendMode );
 }
 
-void LTexture::render( SDL_Renderer* gRenderer, SDL_FRect* clip, float width, float height, double degrees, SDL_FPoint* center, SDL_FlipMode flipMode )
+void CTexture::render( SDL_Renderer* gRenderer, SDL_FRect* clip, float width, float height, double degrees, SDL_FPoint* center, SDL_FlipMode flipMode )
 {
     //Set texture position
     SDL_FRect dstRect{ x, y, static_cast<float>( mWidth ), static_cast<float>( mHeight ) };
@@ -161,28 +161,28 @@ void LTexture::render( SDL_Renderer* gRenderer, SDL_FRect* clip, float width, fl
     SDL_RenderTextureRotated( gRenderer, mTexture, clip, &dstRect, degrees, center, flipMode );
 }
 
-SDL_Texture* LTexture::getTexture() {
+SDL_Texture* CTexture::getTexture() {
     return mTexture;
 }
 
-int LTexture::getWidth()
+int CTexture::getWidth()
 {
     return mWidth;
 }
 
-int LTexture::getHeight()
+int CTexture::getHeight()
 {
     return mHeight;
 }
 
-bool LTexture::isLoaded()
+bool CTexture::isLoaded()
 {
     return mTexture != nullptr;
 }
 
-float LTexture::getX() {
+float CTexture::getX() {
     return x;
 }
-float LTexture::getY() {
+float CTexture::getY() {
     return y;
 }

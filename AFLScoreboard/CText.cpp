@@ -1,19 +1,19 @@
-#include"LText.hpp"
+#include"CText.hpp"
 
 #if defined(SDL_TTF_MAJOR_VERSION)
-LText::LText() :
+CText::CText() :
     text{ "" },
     textCol{},
     font{ nullptr }
 { }
 
-LText::LText(LText& pText) :
+CText::CText(CText& pText) :
     text{ pText.getMessage() },
     textCol{ pText.getCol() },
     font{ pText.getFont() }
 {}
 
-LText& LText::operator=(const LText& other) {
+CText& CText::operator=(const CText& other) {
     if (this != &other) {
         mTexture = other.mTexture;
         mWidth = other.mWidth;
@@ -26,15 +26,15 @@ LText& LText::operator=(const LText& other) {
     return *this;
 }
 
-LText::LText(std::string& pText, SDL_Color& pTextCol, TTF_Font* pFont, float pX, float pY) :
-    LTexture{pX, pY},
+CText::CText(std::string& pText, SDL_Color& pTextCol, TTF_Font* pFont, float pX, float pY) :
+    CTexture{pX, pY},
     text{ pText },
     textCol{ pTextCol },
     font{ pFont }
 { }
 
-LText::LText(std::string& pText, SDL_Color& pTextCol, TTF_Font* pFont, SDL_Renderer* gRenderer, float pX, float pY) :
-    LTexture{ pX, pY },
+CText::CText(std::string& pText, SDL_Color& pTextCol, TTF_Font* pFont, SDL_Renderer* gRenderer, float pX, float pY) :
+    CTexture{ pX, pY },
     text{ pText },
     textCol{ pTextCol },
     font{ pFont }
@@ -42,31 +42,31 @@ LText::LText(std::string& pText, SDL_Color& pTextCol, TTF_Font* pFont, SDL_Rende
     RenderText( gRenderer );
 }
 
-void LText::setMessage(std::string& pText) {
+void CText::setMessage(std::string& pText) {
     text = pText;
 }
 
-void LText::setCol(SDL_Color& pTextCol) {
+void CText::setCol(SDL_Color& pTextCol) {
     textCol = pTextCol;
 }
 
-void LText::setFont(TTF_Font* pFont) {
+void CText::setFont(TTF_Font* pFont) {
     font = pFont;
 }
 
-std::string LText::getMessage() {
+std::string CText::getMessage() {
     return text;
 }
 
-SDL_Color LText::getCol() {
+SDL_Color CText::getCol() {
     return textCol;
 }
 
-TTF_Font* LText::getFont() {
+TTF_Font* CText::getFont() {
     return font;
 }
 
-bool LText::RenderText( SDL_Renderer* gRenderer ){
+bool CText::RenderText( SDL_Renderer* gRenderer ){
     destroy();
 
     if ( SDL_Surface * textSurface = TTF_RenderText_Blended( font, text.c_str(), 0, textCol ); textSurface == nullptr ){

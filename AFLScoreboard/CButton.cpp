@@ -1,6 +1,6 @@
-#include"LButton.hpp"
+#include"CButton.hpp"
 
-LButton::LButton() :
+CButton::CButton() :
 	buttonRect{},
 	mainCol{ 0, 0, 0, 0 },
 	outlineCol{ 0, 0, 0, 0 },
@@ -11,7 +11,7 @@ LButton::LButton() :
 	loadOutlineRect();
 }
 
-LButton::LButton(LRect& pRectangle, float pOutlineWidth, LText& pText):
+CButton::CButton(CRect& pRectangle, float pOutlineWidth, CText& pText):
 	buttonRect{ pRectangle },
 	mainCol{ pRectangle.getColour() },
 	outlineCol{ pRectangle.getColour() },
@@ -22,7 +22,7 @@ LButton::LButton(LRect& pRectangle, float pOutlineWidth, LText& pText):
 	loadOutlineRect();
 }
 
-LButton::LButton(float x, float y, float w, float h, SDL_Color& pMainCol, SDL_Color& pHoverCol, SDL_Color& pOutlineCol, float pOutlineWidth, std::string& pMessage, SDL_Color& pTextColour, TTF_Font* pFont) :
+CButton::CButton(float x, float y, float w, float h, SDL_Color& pMainCol, SDL_Color& pHoverCol, SDL_Color& pOutlineCol, float pOutlineWidth, std::string& pMessage, SDL_Color& pTextColour, TTF_Font* pFont) :
 	buttonRect{ x, y, w, h, pMainCol },
 	mainCol{ pMainCol },
 	outlineCol{ pOutlineCol },
@@ -33,7 +33,7 @@ LButton::LButton(float x, float y, float w, float h, SDL_Color& pMainCol, SDL_Co
 	loadOutlineRect();
 }
 
-LButton::LButton(float x, float y, float w, float h, SDL_Color& pMainCol, SDL_Color& pHoverCol, SDL_Color& pOutlineCol, float pOutlineWidth, LText& pText) :
+CButton::CButton(float x, float y, float w, float h, SDL_Color& pMainCol, SDL_Color& pHoverCol, SDL_Color& pOutlineCol, float pOutlineWidth, CText& pText) :
 	buttonRect{ x, y, w, h, pMainCol },
 	mainCol{ pMainCol },
 	outlineCol{ pOutlineCol },
@@ -44,63 +44,63 @@ LButton::LButton(float x, float y, float w, float h, SDL_Color& pMainCol, SDL_Co
 	loadOutlineRect();
 }
 
-void LButton::setPosition(float x, float y, float w, float h) {
+void CButton::setPosition(float x, float y, float w, float h) {
 	buttonRect.setPosition(x, y, w, h);
 	loadOutlineRect();
 }
 
-void LButton::setRect(LRect& pRectangle) {
+void CButton::setRect(CRect& pRectangle) {
 	buttonRect = pRectangle;
 	loadOutlineRect();
 }
 
-void LButton::setCentre(float x, float y) {
+void CButton::setCentre(float x, float y) {
 	buttonRect.setCentre(x, y);
 	loadOutlineRect();
 }
 
-void LButton::setMainCol(SDL_Color& pMainCol) {
+void CButton::setMainCol(SDL_Color& pMainCol) {
 	mainCol = pMainCol;
 }
 
-void LButton::setHoverCol(SDL_Color& pHoverCol){
+void CButton::setHoverCol(SDL_Color& pHoverCol){
 	hoverCol = pHoverCol;
 }
 
-void LButton::setOutlineCol(SDL_Color& pOutlineCol){
+void CButton::setOutlineCol(SDL_Color& pOutlineCol){
 	outlineCol = pOutlineCol;
 	loadOutlineRect();
 }
 
-void LButton::setOutlineWidth(float pOutlineWidth){
+void CButton::setOutlineWidth(float pOutlineWidth){
 	outlineWidth = pOutlineWidth;
 	loadOutlineRect();
 }
 
-void LButton::setText(LText& pText){
+void CButton::setText(CText& pText){
 	text = pText;
 }
 
-void LButton::setMessage(std::string pMessage){
+void CButton::setMessage(std::string pMessage){
 	text.setMessage(pMessage);
 }
 
-void LButton::setTextCol(SDL_Color& pCol){
+void CButton::setTextCol(SDL_Color& pCol){
 	text.setCol(pCol);
 }
 
-void LButton::setFont(TTF_Font* pFont){
+void CButton::setFont(TTF_Font* pFont){
 	text.setFont(pFont);
 }
 
-void LButton::loadOutlineRect() {
+void CButton::loadOutlineRect() {
 	//defines rectangle for outline
 	SDL_FRect buttonDim{ buttonRect.getRect() };
 	outlineRect.setPosition(buttonDim.x - (outlineWidth / 2), (buttonDim.y - (outlineWidth / 2)), (buttonDim.w + outlineWidth), (buttonDim.h + outlineWidth));
 	outlineRect.setColour(outlineCol);
 }
 
-bool LButton::isClick() {
+bool CButton::isClick() {
 	bool mouseIn = false;
 	float x = -1.f, y = -1.f;
 	SDL_GetMouseState(&x, &y);
@@ -110,7 +110,7 @@ bool LButton::isClick() {
 	return mouseIn;
 }
 
-void LButton::render(SDL_Renderer* renderer) {
+void CButton::render(SDL_Renderer* renderer) {
 	text.RenderText(renderer);
 	text.setCentre(buttonRect.getCentreX(), buttonRect.getCentreY());
 
