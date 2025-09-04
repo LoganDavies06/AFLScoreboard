@@ -12,11 +12,12 @@ public:
     CText();
     CText(CText& pText);
     CText& operator=(const CText&);
-    CText(std::string& pText, SDL_Color& pTextCol, TTF_Font* pFont, float pX = 0.f, float pY = 0.f);
-    CText(std::string& textureText, SDL_Color& textColour, TTF_Font* gFont, SDL_Renderer* gRenderer, float pX = 0.f, float pY = 0.f);
+    CText(std::string& pText, const SDL_Color& pTextCol, TTF_Font* pFont, float pX = 0.f, float pY = 0.f);
+    CText(std::string& textureText, const SDL_Color& textColour, TTF_Font* gFont, SDL_Renderer* gRenderer, float pX = 0.f, float pY = 0.f);
 
     //mutators
     void setMessage(std::string& pText);
+    void setMessage(std::string& pText, SDL_Renderer* renderer);
     void setCol(SDL_Color& pTextCol);
     void setFont(TTF_Font* pFont);
 

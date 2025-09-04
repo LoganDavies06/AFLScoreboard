@@ -6,6 +6,7 @@
 #include<sstream>
 #include<iostream>
 #include<fstream>
+#include<cmath>
 
 #include"CTexture.hpp"
 #include"CText.hpp"
@@ -19,9 +20,11 @@ struct Window {
     SDL_Renderer* renderer{ nullptr };
 };
 
+//function definitions
 bool init(struct screenDimensions dim, struct Window* wn);
 void close(struct Window* wn);
 void myLog(void* userdata, int category, SDL_LogPriority priority, const char* message);
+float getFrameRate(SDL_Window* window);
 
 //sets up the window and renderer
 bool init(struct screenDimensions dim, struct Window* wn) {
@@ -37,6 +40,12 @@ bool init(struct screenDimensions dim, struct Window* wn) {
             success = false;
         }
         else {
+            if (!SDL_SetRenderVSync(wn->renderer, 1)) {
+                SDL_Log("Could not enable VSync. Error: %s\n", SDL_GetError());
+                success = false;
+            }
+
+
             if (!TTF_Init()) {
                 SDL_Log("SDL font rendering failed to load. Error: %s\n", SDL_GetError());
                 success = false;
@@ -68,11 +77,28 @@ void myLog(void* userdata, int category, SDL_LogPriority priority, const char* m
     }
 }
 
+//gets the frame rate of the monitor the window is on
+float getFrameRate(SDL_Window* window) {
+    float refreshRate;
+    Uint32 displayID = SDL_GetDisplayForWindow(window);
+    const SDL_DisplayMode* dm = SDL_GetCurrentDisplayMode(displayID);
+    if (dm) {
+        refreshRate = dm->refresh_rate;
+    }
+    else {
+        refreshRate = 0;
+        SDL_Log("Error in retrieving display state: Error %s\n", SDL_GetError());
+    }
+
+    return refreshRate;
+}
+
 int main(int argc, char* args[]) {
     int exitCode{ 0 };
 
     screenDimensions screenDim{ 1240, 290 };
     Window window;
+    TTF_Font* font;
 
     //make it so that logs are outputted to log.txt
     std::ofstream logFile("log.txt", std::ios::out);
@@ -84,12 +110,15 @@ int main(int argc, char* args[]) {
         exitCode = 1;
     }
 
+    //makes font
+    std::string fontPath{ "media/fonts/Apotek_Narrow.otf" };
+    if (font = TTF_OpenFont(fontPath.c_str(), 50); font == nullptr) {
+        SDL_Log("Could not load font. Error: %s\n", SDL_GetError());
+        exitCode = 2;
+    }
+
     if (exitCode == 0) {
         bool quit{ false };
-
-        int numDisplays;
-        SDL_DisplayID* displays = SDL_GetDisplays(&numDisplays);
-        SDL_Log("Number of displays: %d\n", numDisplays);
 
         //events
         SDL_Event e;
@@ -98,16 +127,28 @@ int main(int argc, char* args[]) {
         SDL_Color bgCol = getCol(colName::DARK_GREY);
 
         CRect testRect{ (screenDim.w / 2.f) - 25, (screenDim.h / 2.f) - 25, 50.f, 50.f, getCol(colName::WHITE) };
+        CRect testRect2{ (screenDim.w / 2.f) - 25, (screenDim.h / 2.f) - 25, 50.f, 50.f, getCol(colName::GREY) };
+
+        std::string displayText = "Screen rate: 0";
+        CText testText{ displayText, getCol(colName::WHITE), font, window.renderer };
+
+        double x = 0;
+        float FPS = getFrameRate(window.window);
 
         //main loop
         while (!quit) {
+
             while (SDL_PollEvent(&e)) {
                 if (e.type == SDL_EVENT_QUIT) {
                     quit = true;
                 }
                 else if (e.type == SDL_EVENT_WINDOW_RESIZED) {
+                    //changes window dimensions if window is resized
                     SDL_GetWindowSize(window.window, &screenDim.w, &screenDim.h);
-                    testRect.setCentre(screenDim.w / 2.f, screenDim.h / 2.f);
+                }
+                else if (e.type = SDL_EVENT_WINDOW_MOVED) {
+                    //gets the framerate of window if it is moved (in case it's move to another monitor with a different frame rate)
+                    FPS = getFrameRate(window.window);
                 }
             }
 
@@ -115,10 +156,24 @@ int main(int argc, char* args[]) {
             SDL_SetRenderDrawColor(window.renderer, bgCol.r, bgCol.g, bgCol.b, bgCol.a);
             SDL_RenderClear(window.renderer);
 
+            //render textures, text and shapes
+            testRect.setCentre(screenDim.w / 2.f, (screenDim.h / 2.f) + (sin(x) * (screenDim.h - 50) / 2.f));
+            testRect2.setCentre(screenDim.w / 2.f, (screenDim.h / 2.f) + (cos(x) * (screenDim.h - 50) / 2.f));
+            testRect2.render(window.renderer);
             testRect.render(window.renderer);
+
+            testText.render(window.renderer);
 
             //refresh screen
             SDL_RenderPresent(window.renderer);
+
+            //math stuff
+            x += 0.02;
+            if (x > 6.28) {
+                x -= 6.28;
+            }
+            displayText = "Screen rate: " + std::to_string(FPS);
+            testText.setMessage(displayText, window.renderer);
         }
     }
 

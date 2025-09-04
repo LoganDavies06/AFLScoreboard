@@ -26,14 +26,14 @@ CText& CText::operator=(const CText& other) {
     return *this;
 }
 
-CText::CText(std::string& pText, SDL_Color& pTextCol, TTF_Font* pFont, float pX, float pY) :
+CText::CText(std::string& pText, const SDL_Color& pTextCol, TTF_Font* pFont, float pX, float pY) :
     CTexture{pX, pY},
     text{ pText },
     textCol{ pTextCol },
     font{ pFont }
 { }
 
-CText::CText(std::string& pText, SDL_Color& pTextCol, TTF_Font* pFont, SDL_Renderer* gRenderer, float pX, float pY) :
+CText::CText(std::string& pText, const SDL_Color& pTextCol, TTF_Font* pFont, SDL_Renderer* gRenderer, float pX, float pY) :
     CTexture{ pX, pY },
     text{ pText },
     textCol{ pTextCol },
@@ -44,6 +44,11 @@ CText::CText(std::string& pText, SDL_Color& pTextCol, TTF_Font* pFont, SDL_Rende
 
 void CText::setMessage(std::string& pText) {
     text = pText;
+}
+
+void CText::setMessage(std::string& pText, SDL_Renderer* renderer) {
+    text = pText;
+    this->RenderText(renderer);
 }
 
 void CText::setCol(SDL_Color& pTextCol) {
