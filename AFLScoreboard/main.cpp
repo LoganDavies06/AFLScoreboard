@@ -42,6 +42,17 @@ bool init(struct screenDimensions dim, struct Window* wn) {
     return success;
 }
 
+void close(struct Window* wn) {
+
+    //cleans up window and renderer
+    SDL_DestroyRenderer(wn->renderer);
+    SDL_DestroyWindow(wn->window);
+    wn->renderer = nullptr;
+    wn->window = nullptr;
+
+    SDL_Quit();
+}
+
 int main(int argc, char* args[]) {
     int exitCode{ 0 };
 
@@ -80,5 +91,6 @@ int main(int argc, char* args[]) {
         }
     }
 
+    close(&window);
     return exitCode;
 }
