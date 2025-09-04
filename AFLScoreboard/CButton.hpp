@@ -24,7 +24,7 @@ public:
 	void setOutlineCol(SDL_Color& pOutlineCol);
 	void setOutlineWidth(float pOutlineWidth);
 
-	void setText(CRext& pText);
+	void setText(CText& pText);
 	void setMessage(std::string pMessage);
 	void setTextCol(SDL_Color& pCol);
 	void setFont(TTF_Font* pFont);

@@ -5,6 +5,7 @@
 #include<string>
 #include<sstream>
 #include<iostream>
+#include<fstream>
 
 #include"CTexture.hpp"
 #include"CText.hpp"
@@ -12,10 +13,15 @@
 #include"CRect.hpp"
 #include"CButton.hpp"
 
+//structure containing window and renderer
 struct Window {
     SDL_Window* window{ nullptr };
     SDL_Renderer* renderer{ nullptr };
 };
+
+bool init(struct screenDimensions dim, struct Window* wn);
+void close(struct Window* wn);
+void myLog(void* userdata, int category, SDL_LogPriority priority, const char* message);
 
 //sets up the window and renderer
 bool init(struct screenDimensions dim, struct Window* wn) {
@@ -42,6 +48,7 @@ bool init(struct screenDimensions dim, struct Window* wn) {
     return success;
 }
 
+//cleans up memory after program finishes
 void close(struct Window* wn) {
 
     //cleans up window and renderer
@@ -53,11 +60,24 @@ void close(struct Window* wn) {
     SDL_Quit();
 }
 
+//writes calls of SDL_Log() to a file instead of to the console
+void myLog(void* userdata, int category, SDL_LogPriority priority, const char* message) {
+    auto* logFile = static_cast<std::ofstream*>(userdata);
+    if (logFile && *logFile) {
+        *logFile << message << '\n';
+        logFile->flush();
+    }
+}
+
 int main(int argc, char* args[]) {
     int exitCode{ 0 };
 
     constexpr screenDimensions screenDim{ 1240, 290 };
     Window window;
+
+    //make it so that logs are outputted to log.txt
+    std::ofstream logFile("log.txt", std::ios::out);
+    SDL_SetLogOutputFunction(myLog, &logFile);
 
     //initialize window
     if (!init(screenDim, &window)) {
