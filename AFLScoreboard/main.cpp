@@ -24,7 +24,7 @@ void close(struct Window* wn);
 void myLog(void* userdata, int category, SDL_LogPriority priority, const char* message);
 
 //sets up the window and renderer
-bool init(struct screenDimensions dim, struct Window* wn, int* mainWindow) {
+bool init(struct screenDimensions dim, struct Window* wn) {
     bool success{ true };
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -32,36 +32,14 @@ bool init(struct screenDimensions dim, struct Window* wn, int* mainWindow) {
         success = false;
     }
     else {
-        //finds the main monitor
-        int numDisplays;
-        SDL_DisplayID* displays = SDL_GetDisplays(&numDisplays);
-        int maxResolution = 0;
-
-        for (int i = 0; i < numDisplays; ++i) {
-            const SDL_DisplayMode* dm = SDL_GetCurrentDisplayMode(i);
-            if (dm) {
-                int res = dm->w * dm->h;
-                if (res > maxResolution) {
-                    maxResolution = res;
-                    *mainWindow = i;
-                }
-            }
-        }
-
-        if (!SDL_CreateWindowAndRenderer("Scoreboard", dim.width, dim.height, SDL_WINDOW_RESIZABLE, &wn->window, &wn->renderer)) {
+        if (!SDL_CreateWindowAndRenderer("Scoreboard", dim.w, dim.h, SDL_WINDOW_RESIZABLE, &wn->window, &wn->renderer)) {
             SDL_Log("Unable to create window. Error: %s\n", SDL_GetError());
             success = false;
         }
         else {
-            if (!SDL_SetWindowPosition(wn->window, SDL_WINDOWPOS_CENTERED_DISPLAY(*mainWindow), SDL_WINDOWPOS_CENTERED_DISPLAY(*mainWindow))) {
-                SDL_Log("SDL failed to set window position. Error: %s\n", SDL_GetError());
+            if (!TTF_Init()) {
+                SDL_Log("SDL font rendering failed to load. Error: %s\n", SDL_GetError());
                 success = false;
-            }
-            else {
-                if (!TTF_Init()) {
-                    SDL_Log("SDL font rendering failed to load. Error: %s\n", SDL_GetError());
-                    success = false;
-                }
             }
         }
     }
@@ -95,15 +73,13 @@ int main(int argc, char* args[]) {
 
     screenDimensions screenDim{ 1240, 290 };
     Window window;
-    int mainWindowId;
-    const SDL_DisplayMode* dm;
 
     //make it so that logs are outputted to log.txt
     std::ofstream logFile("log.txt", std::ios::out);
     SDL_SetLogOutputFunction(myLog, &logFile);
 
     //initialize window
-    if (!init(screenDim, &window, &mainWindowId)) {
+    if (!init(screenDim, &window)) {
         SDL_Log("Unable to initialize program");
         exitCode = 1;
     }
@@ -121,6 +97,8 @@ int main(int argc, char* args[]) {
 
         SDL_Color bgCol = getCol(colName::DARK_GREY);
 
+        CRect testRect{ (screenDim.w / 2.f) - 25, (screenDim.h / 2.f) - 25, 50.f, 50.f, getCol(colName::WHITE) };
+
         //main loop
         while (!quit) {
             while (SDL_PollEvent(&e)) {
@@ -128,21 +106,16 @@ int main(int argc, char* args[]) {
                     quit = true;
                 }
                 else if (e.type == SDL_EVENT_WINDOW_RESIZED) {
-                    dm = SDL_GetCurrentDisplayMode(mainWindowId);
-                    if (dm == nullptr) {
-                        SDL_Log("Failed to get display mode: Error: %s\n", SDL_GetError());
-                        quit = true;
-                    }
-                    else {
-                        screenDim.width = dm->w;
-                        screenDim.height = dm->h;
-                    }
+                    SDL_GetWindowSize(window.window, &screenDim.w, &screenDim.h);
+                    testRect.setCentre(screenDim.w / 2.f, screenDim.h / 2.f);
                 }
             }
 
             //set window background colour
             SDL_SetRenderDrawColor(window.renderer, bgCol.r, bgCol.g, bgCol.b, bgCol.a);
             SDL_RenderClear(window.renderer);
+
+            testRect.render(window.renderer);
 
             //refresh screen
             SDL_RenderPresent(window.renderer);

@@ -10,7 +10,7 @@ CRect::CRect(CRect& pRect) :
 	fillCol{ pRect.getColour() }
 { }
 
-CRect::CRect(float px, float py, float pw, float ph, SDL_Color& pFillCol) :
+CRect::CRect(float px, float py, float pw, float ph, const SDL_Color& pFillCol) :
 	rect{px, py, pw, ph},
 	fillCol{ pFillCol }
 {}

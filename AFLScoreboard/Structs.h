@@ -3,10 +3,10 @@
 
 //screen dimensions
 struct screenDimensions {
-    int width;
-    int height;
+    int w;
+    int h;
 
-    constexpr screenDimensions(int pWidth, int pHeight) : width(pWidth), height(pHeight) {}
+    constexpr screenDimensions(int pWidth, int pHeight) : w(pWidth), h(pHeight) {}
 };
 
 enum class colName {

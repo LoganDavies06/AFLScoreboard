@@ -10,7 +10,7 @@ public:
 	//copy constructor
 	CRect(CRect& pRect);
 	//constructor with parameters
-	CRect(float px, float py, float pw, float ph, SDL_Color& pFillCol);
+	CRect(float px, float py, float pw, float ph, const SDL_Color& pFillCol);
 
 	//mutators
 	void setPosition(float px, float py, float pw, float ph);
