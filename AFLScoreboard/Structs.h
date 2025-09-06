@@ -2,6 +2,8 @@
 #include<SDL3/SDL.h>
 #include<SDL3_ttf/SDL_ttf.h>
 #include<map>
+#include<string>
+#include"CTexture.hpp"
 
 //screen dimensions
 struct screenDimensions {
@@ -19,8 +21,8 @@ struct Font {
 };
 
 struct Time {
-    int seconds;
-    int quarter;
+    int seconds{ 0 };
+    float quarter{ 0.5 };
 };
 
 class Score {
@@ -55,3 +57,11 @@ enum class menuID {
 };
 
 SDL_Color getCol(colName c);
+
+struct Team {
+    std::string name;
+    std::string moniker;
+    std::string abr;
+    Score score{ };
+    CTexture texture;
+};

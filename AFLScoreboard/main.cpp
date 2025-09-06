@@ -15,6 +15,7 @@
 #include"Structs.h"
 #include"CRect.hpp"
 #include"CButton.hpp"
+#include"Menus.h"
 
 //structure containing window and renderer
 struct Window {
@@ -43,6 +44,8 @@ bool init(struct screenDimensions dim, struct Window* wn) {
             success = false;
         }
         else {
+            SDL_SetWindowMinimumSize(wn->window, dim.w, dim.h);
+
             if (!SDL_SetRenderVSync(wn->renderer, 1)) {
                 SDL_Log("Could not enable VSync. Error: %s\n", SDL_GetError());
                 success = false;
@@ -99,8 +102,6 @@ void myLog(void* userdata, int category, SDL_LogPriority priority, const char* m
     }
 }
 
-
-
 //gets the frame rate of the monitor the window is on
 float getFrameRate(SDL_Window* window) {
     float refreshRate;
@@ -134,23 +135,22 @@ std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode) {
 int main(int argc, char* args[]) {
     int exitCode{ 0 };
 
+    //sets up screen dimensions
     screenDimensions screenDim{ 1240, 290 };
-    Window window;
+    constexpr screenDimensions scoreboardSize{ 1240, 290 };
 
     //make it so that logs are outputted to log.txt
     std::ofstream logFile("log.txt", std::ios::out);
     SDL_SetLogOutputFunction(myLog, &logFile);
 
     //initialize window
+    Window window;
     if (!init(screenDim, &window)) {
         SDL_Log("Unable to initialize program");
         exitCode = 1;
     }
 
-    Score homeScore;
-    Score awayScore;
-
-    //makes font
+    //makes fonts
     struct Font apotek;
     apotek.reg = loadFont("media/fonts/Apotek_Wide.otf", &exitCode);
     apotek.bold = loadFont("media/fonts/Apotek_Wide_Black.otf", &exitCode);
@@ -160,19 +160,21 @@ int main(int argc, char* args[]) {
     if (exitCode == 0) {
         bool quit{ false };
 
-        //events
+        //initialise events
         SDL_Event e;
         SDL_zero(e);
 
+        //gets background colour
         SDL_Color bgCol = getCol(colName::DARK_GREY);
 
-        CRect testRect{ (screenDim.w / 2.f) - 25, (screenDim.h / 2.f) - 25, 50.f, 50.f, getCol(colName::WHITE) };
-        CRect testRect2{ (screenDim.w / 2.f) - 25, (screenDim.h / 2.f) - 25, 50.f, 50.f, getCol(colName::GREY) };
+        //sets up teams
+        struct Team home;
+        struct Team away;
 
-        std::string displayText = "Screen rate: 0";
-        CText testText{ displayText, getCol(colName::WHITE), apotek.reg.at(20), window.renderer};
+        //sets up time
+        struct Time time;
 
-        double x = 0;
+        //gets frame rate
         float FPS = getFrameRate(window.window);
 
         //main loop
@@ -191,32 +193,18 @@ int main(int argc, char* args[]) {
                     FPS = getFrameRate(window.window);
                 }
             }
-
             //set window background colour
             SDL_SetRenderDrawColor(window.renderer, bgCol.r, bgCol.g, bgCol.b, bgCol.a);
             SDL_RenderClear(window.renderer);
 
-            //render textures, text and shapes
-            testRect.setCentre(screenDim.w / 2.f, (screenDim.h / 2.f) + (sin(x) * (screenDim.h - 50) / 2.f));
-            testRect2.setCentre(screenDim.w / 2.f, (screenDim.h / 2.f) + (cos(x) * (screenDim.h - 50) / 2.f));
-            testRect2.render(window.renderer);
-            testRect.render(window.renderer);
-
-            testText.render(window.renderer);
+            //renders active menu
+            scoreboard(window.renderer, screenDim, scoreboardSize, apotek, home, away, time);
 
             //refresh screen
             SDL_RenderPresent(window.renderer);
-
-            //math stuff
-            x += 0.02;
-            if (x > 6.28) {
-                x -= 6.28;
-            }
-            displayText = "Screen rate: " + std::to_string(FPS);
-            testText.setMessage(displayText, window.renderer);
         }
     }
 
-    close(&window);
+    close(&window, &apotek);
     return exitCode;
 }
