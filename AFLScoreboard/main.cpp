@@ -24,9 +24,10 @@ struct Window {
 
 //function definitions
 bool init(struct screenDimensions dim, struct Window* wn);
-void close(struct Window* wn);
+void close(struct Window* wn, struct Font* font);
 void myLog(void* userdata, int category, SDL_LogPriority priority, const char* message);
 float getFrameRate(SDL_Window* window);
+std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode);
 
 //sets up the window and renderer
 bool init(struct screenDimensions dim, struct Window* wn) {
@@ -58,8 +59,28 @@ bool init(struct screenDimensions dim, struct Window* wn) {
 }
 
 //cleans up memory after program finishes
-void close(struct Window* wn) {
+void close(struct Window* wn, struct Font* fontStruct) {
+    //cleans up fonts
+    for (const auto& [size, font] : fontStruct->reg) {
+        TTF_CloseFont(font);
+    }
+    fontStruct->reg.clear();
 
+    for (const auto& [size, font] : fontStruct->bold) {
+        TTF_CloseFont(font);
+    }
+    fontStruct->bold.clear();
+
+    for (const auto& [size, font] : fontStruct->narrow) {
+        TTF_CloseFont(font);
+    }
+    fontStruct->narrow.clear();
+
+    for (const auto& [size, font] : fontStruct->comp) {
+        TTF_CloseFont(font);
+    }
+    fontStruct->comp.clear();
+    
     //cleans up window and renderer
     SDL_DestroyRenderer(wn->renderer);
     SDL_DestroyWindow(wn->window);
