@@ -18,11 +18,35 @@ struct Font {
     std::map<int, TTF_Font*> comp;
 };
 
+class Score {
+public:
+    Score();
+
+    void goalScored();
+    void behindScored();
+    void removeLastScore();
+    void removeLastGoal();
+    void removeLastBehind();
+
+    int getGoals();
+    int getBehinds();
+    int getScore();
+
+private:
+    int goals;
+    int behinds;
+    int lastScore = -1;
+};
+
 enum class colName {
     BLACK,
     WHITE,
     DARK_GREY,
     GREY
+};
+
+enum class menuID {
+    SCOREBOARD
 };
 
 SDL_Color getCol(colName c);

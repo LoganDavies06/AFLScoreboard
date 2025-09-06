@@ -147,6 +147,9 @@ int main(int argc, char* args[]) {
         exitCode = 1;
     }
 
+    Score homeScore;
+    Score awayScore;
+
     //makes font
     struct Font apotek;
     apotek.reg = loadFont("media/fonts/Apotek_Wide.otf", &exitCode);

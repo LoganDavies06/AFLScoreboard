@@ -24,6 +24,7 @@
     <ClCompile Include="CText.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menus.cpp" />
     <ClCompile Include="Structs.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +32,7 @@
     <ClInclude Include="CRect.hpp" />
     <ClInclude Include="CText.hpp" />
     <ClInclude Include="CTexture.hpp" />
+    <ClInclude Include="Menus.h" />
     <ClInclude Include="Structs.h" />
   </ItemGroup>
   <ItemGroup>
