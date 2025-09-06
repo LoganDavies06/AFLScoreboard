@@ -7,33 +7,14 @@ CText::CText() :
     font{ nullptr }
 { }
 
-CText::CText(CText& pText) :
-    text{ pText.getMessage() },
-    textCol{ pText.getCol() },
-    font{ pText.getFont() }
-{}
-
-CText& CText::operator=(const CText& other) {
-    if (this != &other) {
-        mTexture = other.mTexture;
-        mWidth = other.mWidth;
-        mHeight = other.mHeight;
-        text = other.text;
-        textCol = other.textCol;
-        font = other.font;
-    }
-
-    return *this;
-}
-
-CText::CText(std::string& pText, const SDL_Color& pTextCol, TTF_Font* pFont, float pX, float pY) :
+CText::CText(const std::string& pText, const SDL_Color& pTextCol, TTF_Font* pFont, float pX, float pY) :
     CTexture{pX, pY},
     text{ pText },
     textCol{ pTextCol },
     font{ pFont }
 { }
 
-CText::CText(std::string& pText, const SDL_Color& pTextCol, TTF_Font* pFont, SDL_Renderer* gRenderer, float pX, float pY) :
+CText::CText(const std::string& pText, const SDL_Color& pTextCol, TTF_Font* pFont, SDL_Renderer* gRenderer, float pX, float pY) :
     CTexture{ pX, pY },
     text{ pText },
     textCol{ pTextCol },
@@ -42,22 +23,22 @@ CText::CText(std::string& pText, const SDL_Color& pTextCol, TTF_Font* pFont, SDL
     RenderText( gRenderer );
 }
 
-void CText::setMessage(std::string& pText) {
+void CText::setMessage(const std::string& pText) {
     text = pText;
 }
 
-void CText::setMessage(std::string& pText, SDL_Renderer* renderer) {
+void CText::setMessage(const std::string& pText, SDL_Renderer* renderer) {
     text = pText;
-    this->RenderText(renderer);
+    RenderText(renderer);
 }
 
-void CText::setCol(SDL_Color& pTextCol) {
+void CText::setCol(const SDL_Color& pTextCol) {
     textCol = pTextCol;
 }
 
-void CText::setCol(SDL_Color& pTextCol, SDL_Renderer* renderer) {
+void CText::setCol(const SDL_Color& pTextCol, SDL_Renderer* renderer) {
     textCol = pTextCol;
-    this->RenderText(renderer);
+    RenderText(renderer);
 }
 
 void CText::setFont(TTF_Font* pFont) {
@@ -66,7 +47,7 @@ void CText::setFont(TTF_Font* pFont) {
 
 void CText::setFont(TTF_Font* pFont, SDL_Renderer* renderer) {
     font = pFont;
-    this->RenderText(renderer);
+    RenderText(renderer);
 }
 
 std::string CText::getMessage() {

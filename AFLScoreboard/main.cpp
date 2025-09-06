@@ -25,7 +25,7 @@ struct Window {
 
 //function definitions
 bool init(struct screenDimensions dim, struct Window* wn);
-void close(struct Window* wn, struct Font* font);
+void close(struct Window* wn, struct Font* font, struct Team home, struct Team away);
 void myLog(void* userdata, int category, SDL_LogPriority priority, const char* message);
 float getFrameRate(SDL_Window* window);
 std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode);
@@ -62,7 +62,7 @@ bool init(struct screenDimensions dim, struct Window* wn) {
 }
 
 //cleans up memory after program finishes
-void close(struct Window* wn, struct Font* fontStruct) {
+void close(struct Window* wn, struct Font* fontStruct, struct Team* home, struct Team* away) {
     //cleans up fonts
     for (const auto& [size, font] : fontStruct->reg) {
         TTF_CloseFont(font);
@@ -83,6 +83,14 @@ void close(struct Window* wn, struct Font* fontStruct) {
         TTF_CloseFont(font);
     }
     fontStruct->comp.clear();
+
+    //destroys textures associated with home team
+    home->texture.destroy();
+    home->score.destroyText();
+
+    //destroys textures associated with away team
+    away->texture.destroy();
+    away->score.destroyText();
     
     //cleans up window and renderer
     SDL_DestroyRenderer(wn->renderer);
@@ -143,6 +151,10 @@ int main(int argc, char* args[]) {
     std::ofstream logFile("log.txt", std::ios::out);
     SDL_SetLogOutputFunction(myLog, &logFile);
 
+    //team structs
+    struct Team home;
+    struct Team away;
+
     //initialize window
     Window window;
     if (!init(screenDim, &window)) {
@@ -168,8 +180,8 @@ int main(int argc, char* args[]) {
         SDL_Color bgCol = getCol(colName::DARK_GREY);
 
         //sets up teams
-        struct Team home;
-        struct Team away;
+        home.score.setUpText(apotek, window.renderer);
+        away.score.setUpText(apotek, window.renderer);
 
         //sets up time
         struct Time time;
@@ -188,7 +200,7 @@ int main(int argc, char* args[]) {
                     //changes window dimensions if window is resized
                     SDL_GetWindowSize(window.window, &screenDim.w, &screenDim.h);
                 }
-                else if (e.type = SDL_EVENT_WINDOW_MOVED) {
+                else if (e.type == SDL_EVENT_WINDOW_MOVED) {
                     //gets the framerate of window if it is moved (in case it's move to another monitor with a different frame rate)
                     FPS = getFrameRate(window.window);
                 }
@@ -198,13 +210,13 @@ int main(int argc, char* args[]) {
             SDL_RenderClear(window.renderer);
 
             //renders active menu
-            scoreboard(window.renderer, screenDim, scoreboardSize, apotek, home, away, time);
+            scoreboard(window.renderer, screenDim, scoreboardSize, apotek, &home, &away, time);
 
             //refresh screen
             SDL_RenderPresent(window.renderer);
         }
     }
 
-    close(&window, &apotek);
+    close(&window, &apotek, &home, &away);
     return exitCode;
 }

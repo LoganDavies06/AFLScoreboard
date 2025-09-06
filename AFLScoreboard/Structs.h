@@ -4,6 +4,8 @@
 #include<map>
 #include<string>
 #include"CTexture.hpp"
+#include"CText.hpp"
+#include"CScore.hpp"
 
 //screen dimensions
 struct screenDimensions {
@@ -23,26 +25,6 @@ struct Font {
 struct Time {
     int seconds{ 0 };
     float quarter{ 0.5 };
-};
-
-class Score {
-public:
-    Score();
-
-    void goalScored();
-    void behindScored();
-    void removeLastScore();
-    void removeLastGoal();
-    void removeLastBehind();
-
-    int getGoals();
-    int getBehinds();
-    int getScore();
-
-private:
-    int goals;
-    int behinds;
-    int lastScore = -1;
 };
 
 enum class colName {

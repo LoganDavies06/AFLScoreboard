@@ -124,8 +124,8 @@ void CTexture::setPosition(float pX, float pY) {
 }
 
 void CTexture::setCentre(float pX, float pY) {
-    x = pX - (float) mWidth/2;
-    y = pY - (float) mHeight/2;
+    x = pX - mWidth/2.f;
+    y = pY - mHeight/2.f;
 }
 
 void CTexture::setColor( Uint8 r, Uint8 g, Uint8 b){

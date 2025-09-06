@@ -16,7 +16,7 @@ CButton::CButton(CRect& pRectangle, float pOutlineWidth, CText& pText):
 	mainCol{ pRectangle.getColour() },
 	outlineCol{ pRectangle.getColour() },
 	hoverCol{ pRectangle.getColour() },
-	text{ pText },
+	text{ pText.getMessage(), pText.getCol(), pText.getFont() },
 	outlineWidth{ pOutlineWidth }
 {
 	loadOutlineRect();
@@ -38,7 +38,7 @@ CButton::CButton(float x, float y, float w, float h, SDL_Color& pMainCol, SDL_Co
 	mainCol{ pMainCol },
 	outlineCol{ pOutlineCol },
 	hoverCol{ pHoverCol },
-	text{ pText },
+	text{ pText.getMessage(), pText.getCol(), pText.getFont() },
 	outlineWidth{ pOutlineWidth }
 {
 	loadOutlineRect();
@@ -78,7 +78,7 @@ void CButton::setOutlineWidth(float pOutlineWidth){
 }
 
 void CButton::setText(CText& pText){
-	text = pText;
+	text.setMessage(pText.getMessage());
 }
 
 void CButton::setMessage(std::string pMessage){

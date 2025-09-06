@@ -10,19 +10,21 @@ class CText : public CTexture{
 public:
     #if defined(SDL_TTF_MAJOR_VERSION)
     CText();
-    CText(CText& pText);
-    CText& operator=(const CText&);
-    CText(std::string& pText, const SDL_Color& pTextCol, TTF_Font* pFont, float pX = 0.f, float pY = 0.f);
-    CText(std::string& textureText, const SDL_Color& textColour, TTF_Font* gFont, SDL_Renderer* gRenderer, float pX = 0.f, float pY = 0.f);
+    CText(CText& pText) = delete;
+    CText& operator=(const CText&) = delete;
+    CText(CText&&) = default;
+    CText& operator=(CText&&) = default;
+
+    CText(const std::string& pText, const SDL_Color& pTextCol, TTF_Font* pFont, float pX = 0.f, float pY = 0.f);
+    CText(const std::string& textureText, const SDL_Color& textColour, TTF_Font* gFont, SDL_Renderer* gRenderer, float pX = 0.f, float pY = 0.f);
 
     //mutators
-    void setMessage(std::string& pText);
-    void setMessage(std::string& pText, SDL_Renderer* renderer);
-    void setCol(SDL_Color& pTextCol);
+    void setMessage(const std::string& pText);
+    void setMessage(const std::string& pText, SDL_Renderer* renderer);
+    void setCol(const SDL_Color& pTextCol);
     void setFont(TTF_Font* pFont);
-    void setCol(SDL_Color& pTextCol, SDL_Renderer* renderer);
+    void setCol(const SDL_Color& pTextCol, SDL_Renderer* renderer);
     void setFont(TTF_Font* pFont, SDL_Renderer* renderer);
-
 
     //accessors
     std::string getMessage();
