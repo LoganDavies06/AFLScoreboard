@@ -55,8 +55,18 @@ void CText::setCol(SDL_Color& pTextCol) {
     textCol = pTextCol;
 }
 
+void CText::setCol(SDL_Color& pTextCol, SDL_Renderer* renderer) {
+    textCol = pTextCol;
+    this->RenderText(renderer);
+}
+
 void CText::setFont(TTF_Font* pFont) {
     font = pFont;
+}
+
+void CText::setFont(TTF_Font* pFont, SDL_Renderer* renderer) {
+    font = pFont;
+    this->RenderText(renderer);
 }
 
 std::string CText::getMessage() {

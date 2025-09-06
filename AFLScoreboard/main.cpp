@@ -7,6 +7,8 @@
 #include<iostream>
 #include<fstream>
 #include<cmath>
+#include<map>
+#include<vector>
 
 #include"CTexture.hpp"
 #include"CText.hpp"
@@ -45,7 +47,6 @@ bool init(struct screenDimensions dim, struct Window* wn) {
                 success = false;
             }
 
-
             if (!TTF_Init()) {
                 SDL_Log("SDL font rendering failed to load. Error: %s\n", SDL_GetError());
                 success = false;
@@ -77,6 +78,8 @@ void myLog(void* userdata, int category, SDL_LogPriority priority, const char* m
     }
 }
 
+
+
 //gets the frame rate of the monitor the window is on
 float getFrameRate(SDL_Window* window) {
     float refreshRate;
@@ -93,12 +96,25 @@ float getFrameRate(SDL_Window* window) {
     return refreshRate;
 }
 
+std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode) {
+    std::map<int, TTF_Font*> fontMap;
+    int sizes[] { 8, 10, 12, 20, 24, 30, 34, 36, 48, 50, 52, 54, 66, 68, 80, 120, 130, 140, 150, 160 };
+
+    for (int i: sizes) {
+        if (fontMap[i] = TTF_OpenFont(fontPath.c_str(), i * 2); fontMap.at(i) == nullptr) {
+            SDL_Log("Could not load font %s. Error: %s\n", fontPath.c_str(), SDL_GetError());
+            *exitCode = 2;
+        }
+    }
+
+    return fontMap;
+}
+
 int main(int argc, char* args[]) {
     int exitCode{ 0 };
 
     screenDimensions screenDim{ 1240, 290 };
     Window window;
-    TTF_Font* font;
 
     //make it so that logs are outputted to log.txt
     std::ofstream logFile("log.txt", std::ios::out);
@@ -111,11 +127,11 @@ int main(int argc, char* args[]) {
     }
 
     //makes font
-    std::string fontPath{ "media/fonts/Apotek_Narrow.otf" };
-    if (font = TTF_OpenFont(fontPath.c_str(), 50); font == nullptr) {
-        SDL_Log("Could not load font. Error: %s\n", SDL_GetError());
-        exitCode = 2;
-    }
+    struct Font apotek;
+    apotek.reg = loadFont("media/fonts/Apotek_Wide.otf", &exitCode);
+    apotek.bold = loadFont("media/fonts/Apotek_Wide_Black.otf", &exitCode);
+    apotek.narrow = loadFont("media/fonts/Apotek_Narrow.otf", &exitCode);
+    apotek.comp = loadFont("media/fonts/Apotek_Comp.otf", &exitCode);
 
     if (exitCode == 0) {
         bool quit{ false };
@@ -130,7 +146,7 @@ int main(int argc, char* args[]) {
         CRect testRect2{ (screenDim.w / 2.f) - 25, (screenDim.h / 2.f) - 25, 50.f, 50.f, getCol(colName::GREY) };
 
         std::string displayText = "Screen rate: 0";
-        CText testText{ displayText, getCol(colName::WHITE), font, window.renderer };
+        CText testText{ displayText, getCol(colName::WHITE), apotek.reg.at(20), window.renderer};
 
         double x = 0;
         float FPS = getFrameRate(window.window);

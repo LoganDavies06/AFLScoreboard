@@ -18,19 +18,19 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LButton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LRect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LText.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LTexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Structs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CRect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,16 +38,16 @@
     <ClInclude Include="Structs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LButton.hpp">
+    <ClInclude Include="CButton.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LRect.hpp">
+    <ClInclude Include="CRect.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LText.hpp">
+    <ClInclude Include="CText.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LTexture.hpp">
+    <ClInclude Include="CTexture.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

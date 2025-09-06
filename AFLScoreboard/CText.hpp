@@ -20,6 +20,9 @@ public:
     void setMessage(std::string& pText, SDL_Renderer* renderer);
     void setCol(SDL_Color& pTextCol);
     void setFont(TTF_Font* pFont);
+    void setCol(SDL_Color& pTextCol, SDL_Renderer* renderer);
+    void setFont(TTF_Font* pFont, SDL_Renderer* renderer);
+
 
     //accessors
     std::string getMessage();
