@@ -18,6 +18,11 @@ struct Font {
     std::map<int, TTF_Font*> comp;
 };
 
+struct Time {
+    int seconds;
+    int quarter;
+};
+
 class Score {
 public:
     Score();

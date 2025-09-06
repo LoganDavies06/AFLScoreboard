@@ -74,3 +74,27 @@ void CRect::render(SDL_Renderer * renderer) const{
 		SDL_Log("Failed to set draw colour. Error %s\n",SDL_GetError());
 	}
 }
+
+static void CRect::drawRect(SDL_Renderer* renderer, int pX, int pY, int pW, int pH, const SDL_Color& pFillCol) {
+	SDL_FRect pRect{ pX, pY, pW, pH };
+
+	if (SDL_SetRenderDrawColor(renderer, pFillCol.r, pFillCol.g, pFillCol.b, pFillCol.a) != 0) {
+		if (SDL_RenderFillRect(renderer, &pRect) == 0) {
+			SDL_Log("Failed to render rectangle. Error %s\n", SDL_GetError());
+		}
+	}
+	else {
+		SDL_Log("Failed to set draw colour. Error %s\n", SDL_GetError());
+	}
+}
+
+static void CRect::drawRect(SDL_Renderer* renderer, SDL_FRect pRect, const SDL_Color& pFillCol) {
+	if (SDL_SetRenderDrawColor(renderer, pFillCol.r, pFillCol.g, pFillCol.b, pFillCol.a) != 0) {
+		if (SDL_RenderFillRect(renderer, &pRect) == 0) {
+			SDL_Log("Failed to render rectangle. Error %s\n", SDL_GetError());
+		}
+	}
+	else {
+		SDL_Log("Failed to set draw colour. Error %s\n", SDL_GetError());
+	}
+}
