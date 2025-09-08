@@ -29,6 +29,7 @@ void close(struct Window* wn, struct Font* font, struct Team* home, struct Team*
 void myLog(void* userdata, int category, SDL_LogPriority priority, const char* message);
 float getFrameRate(SDL_Window* window);
 std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode);
+std::map<std::string, struct TeamData> loadTeamFile();
 
 //sets up the window and renderer
 bool init(struct screenDimensions dim, struct Window* wn) {
@@ -126,6 +127,7 @@ float getFrameRate(SDL_Window* window) {
     return refreshRate;
 }
 
+//loads the fonts
 std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode) {
     std::map<int, TTF_Font*> fontMap;
     int sizes[] { 8, 10, 12, 20, 24, 30, 34, 36, 48, 50, 52, 54, 66, 68, 80, 120, 130, 140, 150, 160 };
@@ -140,10 +142,10 @@ std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode) {
     return fontMap;
 }
 
-std::vector<struct TeamData> loadTeamFile() {
-    std::vector<struct TeamData> dataVector;
+//reads team data from the file
+std::map<std::string, struct TeamData> loadTeamFile() {
+    std::map<std::string, struct TeamData> dataMap;
     std::ifstream file("assets/data/teams.csv");
-    int count = 0;
     std::string num1, num2, num3;
 
     if (!file.is_open()) {
@@ -175,14 +177,51 @@ std::vector<struct TeamData> loadTeamFile() {
 
             getline(ss, currentTeam.moniker, ','); //gets team moniker
             ss.clear();
+
+            //adds team to vector
+            dataMap[currentTeam.abr] = currentTeam;
         }
     }
 
-    return dataVector;
+    return dataMap;
 }
 
-void getTeamData(std::vector<struct TeamData> teamsData, std::string teamAbr) {
+void getTeamData(std::map<std::string, struct TeamData> teamsData, std::string teamAbr, struct Team* team, SDL_Renderer* renderer, Font font) {
+    bool teamFound = false;
+    int index = 0;
+    for (const auto& pair : teamsData) {
+        if (pair.first == teamAbr) {
+            teamFound = true;
+        }
+    }
 
+    if (!teamFound) {
+        SDL_Log("No team %s found", teamAbr.c_str());
+    }
+    else {
+        //set name
+        team->abr = teamAbr;
+        team->name = teamsData.at(teamAbr).name;
+        team->moniker = teamsData.at(teamAbr).moniker;
+
+        //assigns colours
+        for (int i = 0; i < 4; i++) {
+            team->cols[i] = teamsData.at(teamAbr).cols[i];
+        }
+
+        //set the text for scoreboard
+        team->nameText.setMessage(teamAbr);
+        team->nameText.setCol(getCol(colName::WHITE));
+        team->nameText.setFont(font.comp.at(68));
+        team->nameText.RenderText(renderer);
+
+        //set the score texts
+        team->score.setUpText(font, renderer);
+
+        //set the texture
+        std::string filePath = "assets/images/teamCircles/" + teamAbr + ".png";
+        team->texture.loadFromFile(filePath, renderer);
+    }
 }
 
 int main(int argc, char* args[]) {
@@ -217,7 +256,7 @@ int main(int argc, char* args[]) {
     if (exitCode == 0) {
         bool quit{ false };
 
-        std::vector<struct TeamData> teamsData = loadTeamFile();
+        std::map<std::string, struct TeamData> teamsData = loadTeamFile();
 
         //initialise events
         SDL_Event e;
@@ -227,8 +266,8 @@ int main(int argc, char* args[]) {
         SDL_Color bgCol = getCol(colName::DARK_GREY);
 
         //sets up teams
-        home.score.setUpText(apotek, window.renderer);
-        away.score.setUpText(apotek, window.renderer);
+        getTeamData(teamsData, "KLA", &home, window.renderer, apotek);
+        getTeamData(teamsData, "SYL", &away, window.renderer, apotek);
 
         //sets up time
         struct Time time;

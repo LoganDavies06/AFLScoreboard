@@ -40,15 +40,19 @@ enum class menuID {
 
 SDL_Color getCol(colName c);
 
+//teams that are loaded
 struct Team {
     std::string name;
     std::string moniker;
     std::string abr;
+    //colours:         home primary,       home secondary,     clash primary,      clash secondary
+    SDL_Color cols[4]{ SDL_Color{0,0,0,0}, SDL_Color{0,0,0,0}, SDL_Color{0,0,0,0}, SDL_Color{0,0,0,0} };
     Score score{ };
     CTexture texture{ };
     CText nameText{ };
 };
 
+//all teams
 struct TeamData {
     std::string abr;
     std::string name;
