@@ -45,5 +45,14 @@ struct Team {
     std::string moniker;
     std::string abr;
     Score score{ };
-    CTexture texture;
+    CTexture texture{ };
+    CText nameText{ };
+};
+
+struct TeamData {
+    std::string abr;
+    std::string name;
+    std::string moniker;
+    //colours:         home primary,       home secondary,     clash primary,      clash secondary
+    SDL_Color cols[4]{ SDL_Color{0,0,0,0}, SDL_Color{0,0,0,0}, SDL_Color{0,0,0,0}, SDL_Color{0,0,0,0} };
 };

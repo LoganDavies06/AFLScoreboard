@@ -25,7 +25,7 @@ struct Window {
 
 //function definitions
 bool init(struct screenDimensions dim, struct Window* wn);
-void close(struct Window* wn, struct Font* font, struct Team home, struct Team away);
+void close(struct Window* wn, struct Font* font, struct Team* home, struct Team* away);
 void myLog(void* userdata, int category, SDL_LogPriority priority, const char* message);
 float getFrameRate(SDL_Window* window);
 std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode);
@@ -140,6 +140,51 @@ std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode) {
     return fontMap;
 }
 
+std::vector<struct TeamData> loadTeamFile() {
+    std::vector<struct TeamData> dataVector;
+    std::ifstream file("assets/data/teams.csv");
+    int count = 0;
+    std::string num1, num2, num3;
+
+    if (!file.is_open()) {
+        SDL_Log("Unable to open teams file");
+    }
+    else {
+        std::string line;
+        while (std::getline(file, line)) {
+            std::stringstream ss(line);
+            struct TeamData currentTeam;
+
+            getline(ss, currentTeam.abr, ','); //gets team abbreviation
+            getline(ss, currentTeam.name, ','); //gets team name
+
+            //gets colours
+            for (int i = 0; i < 4; i++) {
+                getline(ss, num1, ',');
+                getline(ss, num2, ',');
+                getline(ss, num3, ',');
+
+                //if colour is invalid
+                if (std::stoi(num1) > 255 || std::stoi(num2) > 255 || std::stoi(num3) > 255)
+                {
+                    SDL_Log("Invalid color: %s colour %d\n", currentTeam.abr.c_str(), i);
+                }
+
+                currentTeam.cols[i] = SDL_Color{ (Uint8) std::stoi(num1), (Uint8) std::stoi(num2), (Uint8) std::stoi(num3), 255 };
+            }
+
+            getline(ss, currentTeam.moniker, ','); //gets team moniker
+            ss.clear();
+        }
+    }
+
+    return dataVector;
+}
+
+void getTeamData(std::vector<struct TeamData> teamsData, std::string teamAbr) {
+
+}
+
 int main(int argc, char* args[]) {
     int exitCode{ 0 };
 
@@ -164,13 +209,15 @@ int main(int argc, char* args[]) {
 
     //makes fonts
     struct Font apotek;
-    apotek.reg = loadFont("media/fonts/Apotek_Wide.otf", &exitCode);
-    apotek.bold = loadFont("media/fonts/Apotek_Wide_Black.otf", &exitCode);
-    apotek.narrow = loadFont("media/fonts/Apotek_Narrow.otf", &exitCode);
-    apotek.comp = loadFont("media/fonts/Apotek_Comp.otf", &exitCode);
+    apotek.reg = loadFont("assets/fonts/Apotek_Wide.otf", &exitCode);
+    apotek.bold = loadFont("assets/fonts/Apotek_Wide_Black.otf", &exitCode);
+    apotek.narrow = loadFont("assets/fonts/Apotek_Narrow.otf", &exitCode);
+    apotek.comp = loadFont("assets/fonts/Apotek_Comp.otf", &exitCode);
 
     if (exitCode == 0) {
         bool quit{ false };
+
+        std::vector<struct TeamData> teamsData = loadTeamFile();
 
         //initialise events
         SDL_Event e;
