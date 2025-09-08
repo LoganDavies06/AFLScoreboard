@@ -78,6 +78,8 @@ void CRect::render(SDL_Renderer * renderer) const{
 void CRect::drawRect(SDL_Renderer* renderer, int pX, int pY, int pW, int pH, const SDL_Color& pFillCol) {
 	SDL_FRect pRect{ (float) pX, (float) pY, (float) pW, (float) pH };
 
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
 	if (SDL_SetRenderDrawColor(renderer, pFillCol.r, pFillCol.g, pFillCol.b, pFillCol.a) != 0) {
 		if (SDL_RenderFillRect(renderer, &pRect) == 0) {
 			SDL_Log("Failed to render rectangle. Error %s\n", SDL_GetError());
@@ -89,6 +91,8 @@ void CRect::drawRect(SDL_Renderer* renderer, int pX, int pY, int pW, int pH, con
 }
 
 void CRect::drawRect(SDL_Renderer* renderer, SDL_FRect pRect, const SDL_Color& pFillCol) {
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
 	if (SDL_SetRenderDrawColor(renderer, pFillCol.r, pFillCol.g, pFillCol.b, pFillCol.a) != 0) {
 		if (SDL_RenderFillRect(renderer, &pRect) == 0) {
 			SDL_Log("Failed to render rectangle. Error %s\n", SDL_GetError());

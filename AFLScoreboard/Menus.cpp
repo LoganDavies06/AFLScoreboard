@@ -14,6 +14,10 @@ void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct scre
 		CRect::drawRect(renderer, dim.w / 2 + i, dim.h / 2 - size.h / 2, 2, size.h, getCol(colName::GREY));
 	}
 
+	//translucent team-colored rectangles
+	CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2 - size.h / 2, 969, 145, SDL_Color{ home->cols[0].r, home->cols[0].g , home->cols[0].b, 85 });
+	CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2 + 2, 969, 145, SDL_Color{ away->cols[0].r, away->cols[0].g , away->cols[0].b, 85 });
+
 	//sets position of score texts
 	home->score.setTextPositions(dim.w / 2.f - 170, dim.w / 2.f - 8, dim.w / 2.f + 210, dim.h / 2.f - size.h / 4.f);
 	away->score.setTextPositions(dim.w / 2.f - 170, dim.w / 2.f - 8, dim.w / 2.f + 210, dim.h / 2.f + size.h / 4.f);
@@ -21,4 +25,18 @@ void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct scre
 	//render text
 	home->score.renderTexts(renderer);
 	away->score.renderTexts(renderer);
+
+	//render team texts
+	home->nameText.setCentre(dim.w / 2.f - size.w / 2.f + 120, dim.h / 2.f - size.h / 4.f);
+	away->nameText.setCentre(dim.w / 2.f - size.w / 2.f + 120, dim.h / 2.f + size.h / 4.f);
+
+	home->nameText.render(renderer);
+	away->nameText.render(renderer);
+
+	//render team images
+	home->texture.setPosition(dim.w / 2.f - 385, dim.h / 2.f - size.h / 4.f - 65);
+	away->texture.setPosition(dim.w / 2.f - 385, dim.h / 2.f + size.h / 4.f - 65);
+
+	home->texture.render(renderer, nullptr, 130.f, 130.f);
+	away->texture.render(renderer, nullptr, 130.f, 130.f);
 }
