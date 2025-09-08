@@ -32,6 +32,8 @@ float getFrameRate(SDL_Window* window);
 std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode);
 std::map<std::string, struct TeamData> loadTeamFile();
 void getTeamData(std::map<std::string, struct TeamData> teamsData, std::string teamAbr, struct Team* team, SDL_Renderer* renderer, Font font);
+bool clashTest(struct Team* team1, struct Team* team2);
+float colourComparison(SDL_Color col1, SDL_Color col2);
 
 //sets up the window and renderer
 bool init(struct screenDimensions dim, struct Window* wn) {
@@ -236,8 +238,8 @@ bool clashTest(struct Team* team1, struct Team* team2) {
     int col1Sum = team1->cols[0].r + team1->cols[0].g + team1->cols[0].b;
     int col2Sum = team2->cols[0].r + team2->cols[0].g + team2->cols[0].b;
 
-    //if comparison num is less than 100 or if comparison num is less than 250 for two bright colours
-    if (comparisonNum < 100 || (col1Sum > 200 && col2Sum > 200 && comparisonNum < 250)) {
+    //if comparison num is less than 100 or if comparison num is less than 250 for two dark colours
+    if (comparisonNum < 100 || (col1Sum < 200 && col2Sum < 200 && comparisonNum < 250)) {
         clash = true;
     }
 
@@ -245,34 +247,24 @@ bool clashTest(struct Team* team1, struct Team* team2) {
 }
 
 float colourComparison(SDL_Color col1, SDL_Color col2) {
-    int r1, g1, b1, r2, b2, g2;
+    float r1, g1, b1, r2, b2, g2;
 
-    //gets values for first colour
-    r1 = col1.r;
-    g1 = col1.g;
-    b1 = col1.b;
-
-    //gets values for second colour
-    r2 = col2.r;
-    g2 = col2.g;
-    b2 = col2.b;
-
-    //gets the colour that is the brightest
-    float const1 = 255.f / std::max({ r1, b1, g1, 1 });
-    float const2 = 255.f / std::max({ r2, b2, g2, 1 });
+    //gets the how bright as a % the brighest rgb value is for each colour
+    float const1 = 255.f / std::max({ (int)col1.r, (int)col1.g, (int)col1.b, 1 });
+    float const2 = 255.f / std::max({ (int)col2.r, (int)col2.g, (int)col2.b, 1 });
 
     //set colours to max brightness
-    r1 *= const1;
-    g1 *= const1;
-    b1 *= const1;
+    r1 = col1.r * const1;
+    g1 = col1.g * const1;
+    b1 = col1.b * const1;
 
-    r2 *= const1;
-    g2 *= const2;
-    b2 *= const2;
+    r2 = col2.r * const2;
+    g2 = col2.g * const2;
+    b2 = col2.b * const2;
 
     //return the sum of the root of the squares of each colour value for the two colours
     //sqrt(|r2 - r1|^2) + sqrt(|g2 - g1|^2) + sqrt(|b2 - b1|^2)
-    return std::sqrt(std::pow(std::abs(r2 - r1), 2)) + std::sqrt(std::pow(std::abs(g2 - g1), 2)) + std::sqrt(std::pow(std::abs(g2 - g1), 2));
+    return std::sqrt(std::pow(std::abs(r2 - r1), 2)) + std::sqrt(std::pow(std::abs(g2 - g1), 2)) + std::sqrt(std::pow(std::abs(b2 - b1), 2));
 }
 
 int main(int argc, char* args[]) {
@@ -318,7 +310,14 @@ int main(int argc, char* args[]) {
 
         //sets up teams
         getTeamData(teamsData, "KLA", &home, window.renderer, apotek);
-        getTeamData(teamsData, "SYL", &away, window.renderer, apotek);
+        getTeamData(teamsData, "XAN", &away, window.renderer, apotek);
+
+        bool clash = clashTest(&home, &away);
+
+        if (clash) {
+            std::string filePath = "assets/images/teamCircles/" + away.abr + " Clash.png";
+            away.texture.loadFromFile(filePath, window.renderer);
+        }
 
         //sets up time
         struct Time time;
@@ -347,7 +346,7 @@ int main(int argc, char* args[]) {
             SDL_RenderClear(window.renderer);
 
             //renders active menu
-            scoreboard(window.renderer, screenDim, scoreboardSize, apotek, &home, &away, time);
+            scoreboard(window.renderer, screenDim, scoreboardSize, apotek, &home, &away, time, clash);
 
             //refresh screen
             SDL_RenderPresent(window.renderer);

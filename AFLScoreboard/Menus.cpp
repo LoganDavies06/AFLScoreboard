@@ -3,7 +3,7 @@
 #include"CText.hpp"
 #include"CRect.hpp"
 
-void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct screenDimensions size, struct Font apotek, struct Team* home, struct Team* away, struct Time time) {
+void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct screenDimensions size, struct Font apotek, struct Team* home, struct Team* away, struct Time time, bool clash) {
 	int barPositions[]{ -250, -90, 69, 349 };
 
 	//horizontal bar
@@ -16,7 +16,12 @@ void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct scre
 
 	//translucent team-colored rectangles
 	CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2 - size.h / 2, 969, 145, SDL_Color{ home->cols[0].r, home->cols[0].g , home->cols[0].b, 85 });
-	CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2 + 2, 969, 145, SDL_Color{ away->cols[0].r, away->cols[0].g , away->cols[0].b, 85 });
+	if (clash) {
+		CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2 + 2, 969, 145, SDL_Color{ away->cols[2].r, away->cols[2].g , away->cols[2].b, 85 });
+	}
+	else {
+		CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2 + 2, 969, 145, SDL_Color{ away->cols[0].r, away->cols[0].g , away->cols[0].b, 85 });
+	}
 
 	//sets position of score texts
 	home->score.setTextPositions(dim.w / 2.f - 170, dim.w / 2.f - 8, dim.w / 2.f + 210, dim.h / 2.f - size.h / 4.f);
