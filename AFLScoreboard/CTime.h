@@ -23,6 +23,8 @@ public:
     bool isPaused();
     timeMode getTimeMode();
 
+    bool inQtr();
+
     void update(SDL_Renderer* renderer);
     void nextQuarter(SDL_Renderer* renderer, Font font);
     void pause(SDL_Renderer* renderer, Font font);
@@ -46,6 +48,7 @@ private:
     std::pair<int, int> lastTickDown;
 
     bool paused;
+    bool startCounting;
 
     CText timeTextUp;
     CText timeTextDown;
@@ -54,5 +57,4 @@ private:
 
     std::pair<int, int> getTime(int ticks);
     std::string timeToString(std::pair<int, int> time);
-    bool inQtr();
 };

@@ -6,8 +6,17 @@
 void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct screenDimensions size, struct Font apotek, struct Team* home, struct Team* away, CTime* time, bool clash) {
 	int barPositions[]{ -250, -90, 69, 349 };
 
-	//horizontal bar
-	CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2, size.w, 2, getCol(colName::GREY));
+	if (time->inQtr()) {
+		//horizontal bar
+		CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2, size.w, 2, getCol(colName::GREY));
+		//red box if paused
+		if (time->isPaused()) {
+			CRect::drawRect(renderer, dim.w / 2.f + 475, dim.h / 2.f - size.h / 2.f + 10, 20, 20, getCol(colName::RED));
+		}
+	}
+	else {
+		CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2, dim.w / 2 + 349, 2, getCol(colName::GREY));
+	}
 
 	//draws vertical bars in menu
 	for (int i : barPositions) {
@@ -46,7 +55,4 @@ void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct scre
 	away->texture.render(renderer, nullptr, 130.f, 130.f);
 
 	time->renderTime(renderer, dim, size);
-	if (time->isPaused()) {
-		CRect::drawRect(renderer, dim.w / 2.f + 475, dim.h / 2.f - size.h / 2.f + 10, 20, 20, getCol(colName::RED));
-	}
 }

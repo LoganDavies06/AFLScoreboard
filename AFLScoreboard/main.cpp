@@ -268,7 +268,7 @@ double colourComparison(SDL_Color col1, SDL_Color col2) {
     return std::sqrt(std::pow(std::abs(r2 - r1), 2)) + std::sqrt(std::pow(std::abs(g2 - g1), 2)) + std::sqrt(std::pow(std::abs(b2 - b1), 2));
 }
 
-void handleScoring(CTime* time, Team* team, bool goal, SDL_Renderer* renderer) {
+void handleScoring(CTime* time, Team* team, bool goal, SDL_Renderer* renderer, Font font) {
     if (!time->isPaused()) {
         if (goal) {
             team->score.goalScored();
@@ -279,7 +279,7 @@ void handleScoring(CTime* time, Team* team, bool goal, SDL_Renderer* renderer) {
         team->score.refreshText(renderer);
         if (time->getTimeMode() != CTime::timeMode::UP)
         {
-            time->pause();
+            time->pause(renderer, font);
         }
     }
 }
@@ -363,23 +363,23 @@ int main(int argc, char* args[]) {
                     switch (e.key.key) {
                         //pauses
                     case SDLK_SPACE:
-                        time.pause();
+                        time.pause(window.renderer, apotek);
                         break;
 
                         //home scoring
                     case SDLK_G:
-                        handleScoring(&time, &home, true, window.renderer);
+                        handleScoring(&time, &home, true, window.renderer, apotek);
                         break;
                     case SDLK_H:
-                        handleScoring(&time, &home, false, window.renderer);
+                        handleScoring(&time, &home, false, window.renderer, apotek);
                         break;
 
                         //away scoring
                     case SDLK_V:
-                        handleScoring(&time, &away, true, window.renderer);
+                        handleScoring(&time, &away, true, window.renderer, apotek);
                         break;
                     case SDLK_B:
-                        handleScoring(&time, &away, false, window.renderer);
+                        handleScoring(&time, &away, false, window.renderer, apotek);
                         break;
                     }
                 }
