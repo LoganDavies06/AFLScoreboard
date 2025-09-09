@@ -344,8 +344,6 @@ int main(int argc, char* args[]) {
 
         //main loop
         while (!quit) {
-            //frameStart = SDL_GetTicks();
-
             while (SDL_PollEvent(&e)) {
                 if (e.type == SDL_EVENT_QUIT) {
                     quit = true;

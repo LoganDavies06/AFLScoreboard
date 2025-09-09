@@ -6,6 +6,12 @@
 void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct screenDimensions size, struct Font apotek, struct Team* home, struct Team* away, CTime* time, bool clash) {
 	int barPositions[]{ -250, -90, 69, 349 };
 
+	//black rectangles around the outside
+	CRect::drawRect(renderer, 0.f, 0.f, static_cast<float>(dim.w), (dim.h - size.h) / 2.f, getCol(colName::BLACK));
+	CRect::drawRect(renderer, 0.f, (dim.h + size.h) / 2.f, static_cast<float>(dim.w), (dim.h - size.h) / 2.f, getCol(colName::BLACK));
+	CRect::drawRect(renderer, 0.f, 0.f, (dim.w - size.w) / 2.f, static_cast<float>(dim.h), getCol(colName::BLACK));
+	CRect::drawRect(renderer, (dim.w + size.w) / 2.f, 0.f, (dim.w - size.w) / 2.f, static_cast<float>(dim.h), getCol(colName::BLACK));
+
 	if (time->inQtr()) {
 		//horizontal bar
 		CRect::drawRect(renderer, dim.w / 2.f - size.w / 2.f, dim.h / 2.f, static_cast<float>(size.w), 2.f, getCol(colName::GREY));
@@ -15,7 +21,7 @@ void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct scre
 		}
 	}
 	else {
-		CRect::drawRect(renderer, dim.w / 2.f - size.w / 2.f, dim.h / 2.f, dim.w / 2.f + 349, 2, getCol(colName::GREY));
+		CRect::drawRect(renderer, dim.w / 2.f - size.w / 2.f, dim.h / 2.f, size.w / 2.f + 349, 2, getCol(colName::GREY));
 	}
 
 	//draws vertical bars in menu
