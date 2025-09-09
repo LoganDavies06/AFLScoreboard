@@ -20,14 +20,12 @@ public:
     int getTimePassed();
     int getTimeLeft();
     float getQuarter();
+    bool isPaused();
+    timeMode getTimeMode();
 
     void update(SDL_Renderer* renderer);
-    void nextQuarter();
-    void pause();
-
-    std::pair<int, int> getTime(int ticks);
-    std::string timeToString(std::pair<int, int> time);
-    bool inQtr();
+    void nextQuarter(SDL_Renderer* renderer, Font font);
+    void pause(SDL_Renderer* renderer, Font font);
 
     void renderTime(SDL_Renderer* renderer, screenDimensions dim, screenDimensions size);
     void setTimeMode(timeMode mode);
@@ -53,4 +51,8 @@ private:
     CText timeTextDown;
     CText qtrTextLine1;
     CText qtrTextLine2;
+
+    std::pair<int, int> getTime(int ticks);
+    std::string timeToString(std::pair<int, int> time);
+    bool inQtr();
 };

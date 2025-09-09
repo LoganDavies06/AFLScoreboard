@@ -26,7 +26,8 @@ enum class colName {
     BLACK,
     WHITE,
     DARK_GREY,
-    GREY
+    GREY,
+    RED
 };
 
 enum class menuID {

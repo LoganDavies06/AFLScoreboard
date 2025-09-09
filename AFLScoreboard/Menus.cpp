@@ -46,4 +46,7 @@ void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct scre
 	away->texture.render(renderer, nullptr, 130.f, 130.f);
 
 	time->renderTime(renderer, dim, size);
+	if (time->isPaused()) {
+		CRect::drawRect(renderer, dim.w / 2.f + 475, dim.h / 2.f - size.h / 2.f + 10, 20, 20, getCol(colName::RED));
+	}
 }

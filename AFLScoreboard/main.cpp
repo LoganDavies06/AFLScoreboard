@@ -268,6 +268,22 @@ double colourComparison(SDL_Color col1, SDL_Color col2) {
     return std::sqrt(std::pow(std::abs(r2 - r1), 2)) + std::sqrt(std::pow(std::abs(g2 - g1), 2)) + std::sqrt(std::pow(std::abs(b2 - b1), 2));
 }
 
+void handleScoring(CTime* time, Team* team, bool goal, SDL_Renderer* renderer) {
+    if (!time->isPaused()) {
+        if (goal) {
+            team->score.goalScored();
+        }
+        else{
+            team->score.behindScored();
+        }
+        team->score.refreshText(renderer);
+        if (time->getTimeMode() != CTime::timeMode::UP)
+        {
+            time->pause();
+        }
+    }
+}
+
 int main(int argc, char* args[]) {
     int exitCode{ 0 };
 
@@ -325,9 +341,6 @@ int main(int argc, char* args[]) {
 
         //gets frame rate and sets up limiting
         float FPS = getFrameRate(window.window);
-        //int frameDelay = 1000 / FPS;
-        //Uint64 frameStart;
-        //int frameTime;
 
         //main loop
         while (!quit) {
@@ -346,9 +359,27 @@ int main(int argc, char* args[]) {
                     FPS = (int) std::floor(getFrameRate(window.window));
                 }
                 else if (e.type == SDL_EVENT_KEY_DOWN) {
+                    //handles when a key is pressed
                     switch (e.key.key) {
+                        //pauses
                     case SDLK_SPACE:
                         time.pause();
+                        break;
+
+                        //home scoring
+                    case SDLK_G:
+                        handleScoring(&time, &home, true, window.renderer);
+                        break;
+                    case SDLK_H:
+                        handleScoring(&time, &home, false, window.renderer);
+                        break;
+
+                        //away scoring
+                    case SDLK_V:
+                        handleScoring(&time, &away, true, window.renderer);
+                        break;
+                    case SDLK_B:
+                        handleScoring(&time, &away, false, window.renderer);
                         break;
                     }
                 }
@@ -364,13 +395,6 @@ int main(int argc, char* args[]) {
 
             //refresh screen
             SDL_RenderPresent(window.renderer);
-
-            //limit frame rate to nearest int
-            //frameTime = SDL_GetTicks() - (int) frameStart;
-
-            //if (frameTime < frameDelay) {
-                //SDL_Delay(frameDelay - frameTime);
-            //}
         }
     }
 

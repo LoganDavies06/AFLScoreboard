@@ -8,7 +8,7 @@ CTime::CTime() :
 	startTicksDown{ SDL_GetTicks() },
 	startTicksUp{ SDL_GetTicks() },
 	pausedTicks{ 0 },
-	quarter{ 1.f },
+	quarter{ 0.5 },
 	timeInQtr{ 1200 },
 	lastTickUp{ 0, 0 },
 	lastTickDown{ 20, 0 },
@@ -26,7 +26,7 @@ CTime::CTime(SDL_Renderer* renderer, struct Font font) :
 	startTicksDown{ SDL_GetTicks() },
 	startTicksUp{ SDL_GetTicks() },
 	pausedTicks{ 0 },
-	quarter{ 1.f },
+	quarter{ 0.5 },
 	timeInQtr{ 1200 },
 	lastTickUp{ 0, 0 },
 	lastTickDown{ 20, 0 },
@@ -41,6 +41,8 @@ CTime::CTime(SDL_Renderer* renderer, struct Font font) :
 int CTime::getTimePassed() { return timePassed; }
 int CTime::getTimeLeft() { return timeLeft; }
 float CTime::getQuarter() { return quarter ;}
+bool CTime::isPaused() { return paused; }
+CTime::timeMode CTime::getTimeMode() { return currentTimeMode; }
 
 std::pair<int, int> CTime::getTime(int ticks) {
 	int totalTime = ticks / 1000;
@@ -96,29 +98,72 @@ void CTime::update(SDL_Renderer* renderer) {
 	}
 }
 
-void CTime::nextQuarter() {
+void CTime::nextQuarter(SDL_Renderer* renderer, Font font) {
 	quarter += 0.5;
 
 	if (inQtr()) {
 		startTicksDown = SDL_GetTicks();
-		paused = false;
+		paused = true;
+		qtrTextLine1.setFont(font.reg.at(54));
+		qtrTextLine1.setMessage("Q" + std::to_string((int)quarter), renderer);
 	}
 	else {
 		paused = true;
+
+		//sets the text for the quarter
+		if (quarter == 0.5) {
+			qtrTextLine1.setFont(font.reg.at(30));
+			qtrTextLine2.setFont(font.reg.at(30));
+
+			qtrTextLine1.setMessage("STARTING", renderer);
+			qtrTextLine2.setMessage("SOON" + std::to_string((int)quarter), renderer);
+		}
+		else {
+			qtrTextLine1.setFont(font.reg.at(36));
+			qtrTextLine2.setFont(font.reg.at(36));
+
+			if (quarter == 1.5) {
+				qtrTextLine1.setMessage("QUARTER", renderer);
+				qtrTextLine2.setMessage("TIME" + std::to_string((int)quarter), renderer);
+			}
+			else if (quarter == 2.5) {
+				qtrTextLine1.setMessage("HALF", renderer);
+				qtrTextLine2.setMessage("TIME" + std::to_string((int)quarter), renderer);
+			}
+			else if (quarter == 3.5) {
+				qtrTextLine1.setMessage("3 QUARTER", renderer);
+				qtrTextLine2.setMessage("TIME" + std::to_string((int)quarter), renderer);
+			}
+			else if (quarter == 4.5) {
+				qtrTextLine1.setMessage("FULL", renderer);
+				qtrTextLine2.setMessage("TIME" + std::to_string((int)quarter), renderer);
+			}
+		}
 	}
 }
 
-void CTime::pause() { 
+//called when the pause button is hit
+void CTime::pause(SDL_Renderer* renderer, Font font) { 
 	if (inQtr()) {
-		if (paused && timeLeft >= 0) {
+		//if time has run out or there is no count down
+		if (timeLeft <= 0 || currentTimeMode == timeMode::UP) {
+			nextQuarter(renderer, font);
+		}
+
+		//if it is paused
+		else if (paused) {
 			paused = false;
 			startTicksDown = SDL_GetTicks() - pausedTicks;
 		}
 
+		//if it isn't paused
 		else {
 			paused = true;
 			pausedTicks = SDL_GetTicks() - startTicksDown;
 		}
+	}
+	else {
+		nextQuarter();
 	}
 }
 
