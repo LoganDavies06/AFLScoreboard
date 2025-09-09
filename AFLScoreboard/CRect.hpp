@@ -27,7 +27,7 @@ public:
 	//renders rectangle
 	bool inRect(float x, float y) const;
 	void render(SDL_Renderer * gRenderer) const;
-	static void drawRect(SDL_Renderer* renderer, int pX, int pY, int pW, int pH, const SDL_Color& pFillCol);
+	static void drawRect(SDL_Renderer* renderer, float pX, float pY, float pW, float pH, const SDL_Color& pFillCol);
 	static void drawRect(SDL_Renderer* renderer, SDL_FRect pRect, const SDL_Color& pFillCol);
 
 private:

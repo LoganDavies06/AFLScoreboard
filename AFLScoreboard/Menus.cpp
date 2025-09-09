@@ -8,28 +8,28 @@ void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct scre
 
 	if (time->inQtr()) {
 		//horizontal bar
-		CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2, size.w, 2, getCol(colName::GREY));
+		CRect::drawRect(renderer, dim.w / 2.f - size.w / 2.f, dim.h / 2.f, static_cast<float>(size.w), 2.f, getCol(colName::GREY));
 		//red box if paused
 		if (time->isPaused()) {
 			CRect::drawRect(renderer, dim.w / 2.f + 475, dim.h / 2.f - size.h / 2.f + 10, 20, 20, getCol(colName::RED));
 		}
 	}
 	else {
-		CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2, dim.w / 2 + 349, 2, getCol(colName::GREY));
+		CRect::drawRect(renderer, dim.w / 2.f - size.w / 2.f, dim.h / 2.f, dim.w / 2.f + 349, 2, getCol(colName::GREY));
 	}
 
 	//draws vertical bars in menu
 	for (int i : barPositions) {
-		CRect::drawRect(renderer, dim.w / 2 + i, dim.h / 2 - size.h / 2, 2, size.h, getCol(colName::GREY));
+		CRect::drawRect(renderer, dim.w / 2.f + i, dim.h / 2.f - size.h / 2.f, 2, static_cast<float>(size.h), getCol(colName::GREY));
 	}
 
 	//translucent team-colored rectangles
-	CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2 - size.h / 2, 969, 145, SDL_Color{ home->cols[0].r, home->cols[0].g , home->cols[0].b, 85 });
+	CRect::drawRect(renderer, dim.w / 2.f - size.w / 2.f, dim.h / 2.f - size.h / 2.f, 969, 145, SDL_Color{ home->cols[0].r, home->cols[0].g , home->cols[0].b, 85 });
 	if (clash) {
-		CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2 + 2, 969, 145, SDL_Color{ away->cols[2].r, away->cols[2].g , away->cols[2].b, 85 });
+		CRect::drawRect(renderer, dim.w / 2.f - size.w / 2.f, dim.h / 2.f + 2, 969, 145, SDL_Color{ away->cols[2].r, away->cols[2].g , away->cols[2].b, 85 });
 	}
 	else {
-		CRect::drawRect(renderer, dim.w / 2 - size.w / 2, dim.h / 2 + 2, 969, 145, SDL_Color{ away->cols[0].r, away->cols[0].g , away->cols[0].b, 85 });
+		CRect::drawRect(renderer, dim.w / 2.f - size.w / 2.f, dim.h / 2.f + 2, 969, 145, SDL_Color{ away->cols[0].r, away->cols[0].g , away->cols[0].b, 85 });
 	}
 
 	//sets position of score texts

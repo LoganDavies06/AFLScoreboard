@@ -40,20 +40,20 @@ CTime::CTime(SDL_Renderer* renderer, struct Font font) :
 	qtrTextLine2{ "SOON", getCol(colName::WHITE), font.reg.at(30), renderer }
 {}
 
-int CTime::getTimePassed() { return timePassed; }
-int CTime::getTimeLeft() { return timeLeft; }
+Uint64 CTime::getTimePassed() { return timePassed; }
+Uint64 CTime::getTimeLeft() { return timeLeft; }
 float CTime::getQuarter() { return quarter ;}
 bool CTime::isPaused() { return paused; }
 CTime::timeMode CTime::getTimeMode() { return currentTimeMode; }
 
-std::pair<int, int> CTime::getTime(int ticks, bool doFloor) {
+std::pair<int, int> CTime::getTime(Uint64 ticks, bool doFloor) {
 	int totalTime = 0;
 
 	if (doFloor) {
-		totalTime = ticks / 1000;
+		totalTime = static_cast<int>(ticks / 1000);
 	}
 	else {
-		totalTime = std::ceil(ticks / 1000.f);
+		totalTime = static_cast<int>(std::ceil(ticks / 1000.f));
 	}
 
 	return { totalTime / 60, totalTime % 60 };

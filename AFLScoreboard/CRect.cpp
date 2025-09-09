@@ -75,7 +75,7 @@ void CRect::render(SDL_Renderer * renderer) const{
 	}
 }
 
-void CRect::drawRect(SDL_Renderer* renderer, int pX, int pY, int pW, int pH, const SDL_Color& pFillCol) {
+void CRect::drawRect(SDL_Renderer* renderer, float pX, float pY, float pW, float pH, const SDL_Color& pFillCol) {
 	SDL_FRect pRect{ (float) pX, (float) pY, (float) pW, (float) pH };
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);

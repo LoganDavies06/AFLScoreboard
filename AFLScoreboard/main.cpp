@@ -138,7 +138,7 @@ std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode) {
     int sizes[] { 8, 10, 12, 20, 24, 30, 34, 36, 48, 50, 52, 54, 66, 68, 80, 120, 130, 140, 150, 160 };
 
     for (int i: sizes) {
-        if (fontMap[i] = TTF_OpenFont(fontPath.c_str(), i * 2); fontMap.at(i) == nullptr) {
+        if (fontMap[i] = TTF_OpenFont(fontPath.c_str(), static_cast<float>(i * 2)); fontMap.at(i) == nullptr) {
             SDL_Log("Could not load font %s. Error: %s\n", fontPath.c_str(), SDL_GetError());
             *exitCode = 2;
         }
@@ -356,7 +356,7 @@ int main(int argc, char* args[]) {
                 }
                 else if (e.type == SDL_EVENT_WINDOW_MOVED) {
                     //gets the framerate of window if it is moved (in case it's move to another monitor with a different frame rate)
-                    FPS = (int) std::floor(getFrameRate(window.window));
+                    FPS = getFrameRate(window.window);
                 }
                 else if (e.type == SDL_EVENT_KEY_DOWN) {
                     //handles when a key is pressed

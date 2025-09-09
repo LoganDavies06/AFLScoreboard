@@ -17,8 +17,8 @@ public:
         BOTH
     };
 
-    int getTimePassed();
-    int getTimeLeft();
+    Uint64 getTimePassed();
+    Uint64 getTimeLeft();
     float getQuarter();
     bool isPaused();
     timeMode getTimeMode();
@@ -33,11 +33,11 @@ public:
     void setTimeMode(timeMode mode);
 
 private:
-    int timePassed;
-    int timeLeft;
+    Uint64 timePassed;
+    Uint64 timeLeft;
     Uint64 startTicksDown;
     Uint64 startTicksUp;
-    int pausedTicks;
+    Uint64 pausedTicks;
     timeMode currentTimeMode;
 
     //if this is an integer, it's that quarter, other wise a x.5 means between two quarters
@@ -55,6 +55,6 @@ private:
     CText qtrTextLine1;
     CText qtrTextLine2;
 
-    std::pair<int, int> getTime(int ticks, bool doFloor = true);
+    std::pair<int, int> getTime(Uint64 ticks, bool doFloor = true);
     std::string timeToString(std::pair<int, int> time);
 };
