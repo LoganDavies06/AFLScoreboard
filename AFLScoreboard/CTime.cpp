@@ -46,8 +46,16 @@ float CTime::getQuarter() { return quarter ;}
 bool CTime::isPaused() { return paused; }
 CTime::timeMode CTime::getTimeMode() { return currentTimeMode; }
 
-std::pair<int, int> CTime::getTime(int ticks) {
-	int totalTime = ticks / 1000;
+std::pair<int, int> CTime::getTime(int ticks, bool doFloor) {
+	int totalTime = 0;
+
+	if (doFloor) {
+		totalTime = ticks / 1000;
+	}
+	else {
+		totalTime = std::ceil(ticks / 1000.f);
+	}
+
 	return { totalTime / 60, totalTime % 60 };
 }
 
@@ -76,8 +84,8 @@ void CTime::update(SDL_Renderer* renderer) {
 			if (timePassedPair.second != lastTickUp.second) {
 				std::string timePassedStr = timeToString(timePassedPair);
 				timeTextUp.setMessage(timePassedStr, renderer);
+				lastTickUp = timePassedPair;
 			}
-			lastTickUp = timePassedPair;
 
 		if (currentTimeMode != timeMode::UP) {
 			if (paused) {
@@ -88,12 +96,20 @@ void CTime::update(SDL_Renderer* renderer) {
 			}
 
 			if (timeLeft >= 0) {
-				std::pair<int, int> timeLeftPair = getTime(timeLeft);
+				std::pair<int, int> timeLeftPair = getTime(timeLeft, false);
 				if (timeLeftPair.second != lastTickDown.second) {
 					std::string timeLeftStr = timeToString(timeLeftPair);
 					timeTextDown.setMessage(timeLeftStr, renderer);
+					lastTickUp = timePassedPair;
 				}
-				lastTickUp = timePassedPair;
+			}
+			else {
+				std::pair<int, int> timeLeftPair = getTime(0);
+				if (timeLeftPair.second != lastTickDown.second) {
+					std::string timeLeftStr = timeToString(timeLeftPair);
+					timeTextDown.setMessage(timeLeftStr, renderer);
+					lastTickUp = timePassedPair;
+				}
 			}
 
 		}

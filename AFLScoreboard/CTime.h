@@ -55,6 +55,6 @@ private:
     CText qtrTextLine1;
     CText qtrTextLine2;
 
-    std::pair<int, int> getTime(int ticks);
+    std::pair<int, int> getTime(int ticks, bool doFloor = true);
     std::string timeToString(std::pair<int, int> time);
 };
