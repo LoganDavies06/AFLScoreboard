@@ -39,6 +39,9 @@
     <ClCompile Include="CScore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CTime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Structs.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CScore.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CTime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

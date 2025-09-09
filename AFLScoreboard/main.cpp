@@ -17,6 +17,7 @@
 #include"CRect.hpp"
 #include"CButton.hpp"
 #include"Menus.h"
+#include"CTime.h"
 
 //structure containing window and renderer
 struct Window {
@@ -33,7 +34,7 @@ std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode);
 std::map<std::string, struct TeamData> loadTeamFile();
 void getTeamData(std::map<std::string, struct TeamData> teamsData, std::string teamAbr, struct Team* team, SDL_Renderer* renderer, Font font);
 bool clashTest(struct Team* team1, struct Team* team2);
-float colourComparison(SDL_Color col1, SDL_Color col2);
+double colourComparison(SDL_Color col1, SDL_Color col2);
 
 //sets up the window and renderer
 bool init(struct screenDimensions dim, struct Window* wn) {
@@ -232,7 +233,7 @@ bool clashTest(struct Team* team1, struct Team* team2) {
     bool clash = false;
 
     //gets the number that compares the colours
-    float comparisonNum = colourComparison(team1->cols[0], team2->cols[0]);
+    double comparisonNum = colourComparison(team1->cols[0], team2->cols[0]);
 
     //sum of colour values (brightness measure)
     int col1Sum = team1->cols[0].r + team1->cols[0].g + team1->cols[0].b;
@@ -246,7 +247,7 @@ bool clashTest(struct Team* team1, struct Team* team2) {
     return clash;
 }
 
-float colourComparison(SDL_Color col1, SDL_Color col2) {
+double colourComparison(SDL_Color col1, SDL_Color col2) {
     float r1, g1, b1, r2, b2, g2;
 
     //gets the how bright as a % the brighest rgb value is for each colour
@@ -310,7 +311,7 @@ int main(int argc, char* args[]) {
 
         //sets up teams
         getTeamData(teamsData, "KLA", &home, window.renderer, apotek);
-        getTeamData(teamsData, "XAN", &away, window.renderer, apotek);
+        getTeamData(teamsData, "SYL", &away, window.renderer, apotek);
 
         bool clash = clashTest(&home, &away);
 
@@ -320,13 +321,17 @@ int main(int argc, char* args[]) {
         }
 
         //sets up time
-        struct Time time;
+        CTime time{window.renderer, apotek};
 
-        //gets frame rate
+        //gets frame rate and sets up limiting
         float FPS = getFrameRate(window.window);
+        //int frameDelay = 1000 / FPS;
+        //Uint64 frameStart;
+        //int frameTime;
 
         //main loop
         while (!quit) {
+            //frameStart = SDL_GetTicks();
 
             while (SDL_PollEvent(&e)) {
                 if (e.type == SDL_EVENT_QUIT) {
@@ -338,18 +343,34 @@ int main(int argc, char* args[]) {
                 }
                 else if (e.type == SDL_EVENT_WINDOW_MOVED) {
                     //gets the framerate of window if it is moved (in case it's move to another monitor with a different frame rate)
-                    FPS = getFrameRate(window.window);
+                    FPS = (int) std::floor(getFrameRate(window.window));
+                }
+                else if (e.type == SDL_EVENT_KEY_DOWN) {
+                    switch (e.key.key) {
+                    case SDLK_SPACE:
+                        time.pause();
+                        break;
+                    }
                 }
             }
             //set window background colour
             SDL_SetRenderDrawColor(window.renderer, bgCol.r, bgCol.g, bgCol.b, bgCol.a);
             SDL_RenderClear(window.renderer);
 
+            time.update(window.renderer);
+
             //renders active menu
-            scoreboard(window.renderer, screenDim, scoreboardSize, apotek, &home, &away, time, clash);
+            scoreboard(window.renderer, screenDim, scoreboardSize, apotek, &home, &away, &time, clash);
 
             //refresh screen
             SDL_RenderPresent(window.renderer);
+
+            //limit frame rate to nearest int
+            //frameTime = SDL_GetTicks() - (int) frameStart;
+
+            //if (frameTime < frameDelay) {
+                //SDL_Delay(frameDelay - frameTime);
+            //}
         }
     }
 

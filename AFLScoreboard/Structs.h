@@ -22,11 +22,6 @@ struct Font {
     std::map<int, TTF_Font*> comp;
 };
 
-struct Time {
-    int seconds{ 0 };
-    float quarter{ 0.5 };
-};
-
 enum class colName {
     BLACK,
     WHITE,

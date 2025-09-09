@@ -3,7 +3,7 @@
 #include"CText.hpp"
 #include"CRect.hpp"
 
-void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct screenDimensions size, struct Font apotek, struct Team* home, struct Team* away, struct Time time, bool clash) {
+void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct screenDimensions size, struct Font apotek, struct Team* home, struct Team* away, CTime* time, bool clash) {
 	int barPositions[]{ -250, -90, 69, 349 };
 
 	//horizontal bar
@@ -44,4 +44,6 @@ void scoreboard(SDL_Renderer* renderer, struct screenDimensions dim, struct scre
 
 	home->texture.render(renderer, nullptr, 130.f, 130.f);
 	away->texture.render(renderer, nullptr, 130.f, 130.f);
+
+	time->renderTime(renderer, dim, size);
 }

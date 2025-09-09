@@ -24,6 +24,7 @@
     <ClCompile Include="CScore.cpp" />
     <ClCompile Include="CText.cpp" />
     <ClCompile Include="CTexture.cpp" />
+    <ClCompile Include="CTime.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menus.cpp" />
     <ClCompile Include="Structs.cpp" />
@@ -34,6 +35,7 @@
     <ClInclude Include="CScore.hpp" />
     <ClInclude Include="CText.hpp" />
     <ClInclude Include="CTexture.hpp" />
+    <ClInclude Include="CTime.h" />
     <ClInclude Include="Menus.h" />
     <ClInclude Include="Structs.h" />
   </ItemGroup>
