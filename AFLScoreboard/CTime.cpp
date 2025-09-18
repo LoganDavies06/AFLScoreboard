@@ -260,3 +260,10 @@ void CTime::renderTime(SDL_Renderer* renderer, screenDimensions dim, screenDimen
 void CTime::setTimeMode(timeMode mode) {
 	currentTimeMode = mode;
 }
+
+void CTime::destroyTextures() {
+	timeTextUp.destroy();
+	timeTextDown.destroy();
+	qtrTextLine1.destroy();
+	qtrTextLine2.destroy();
+}

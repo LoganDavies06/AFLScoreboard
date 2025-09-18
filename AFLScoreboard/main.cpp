@@ -27,7 +27,7 @@ struct Window {
 
 //function definitions
 bool init(struct screenDimensions dim, struct Window* wn);
-void close(struct Window* wn, struct Font* font, struct Team* home, struct Team* away);
+void close(struct Window* wn, struct Font* font, struct Team* home, struct Team* away, CTime* time);
 void myLog(void* userdata, int category, SDL_LogPriority priority, const char* message);
 float getFrameRate(SDL_Window* window);
 std::map<int, TTF_Font*> loadFont(std::string fontPath, int* exitCode);
@@ -68,7 +68,7 @@ bool init(struct screenDimensions dim, struct Window* wn) {
 }
 
 //cleans up memory after program finishes
-void close(struct Window* wn, struct Font* fontStruct, struct Team* home, struct Team* away) {
+void close(struct Window* wn, struct Font* fontStruct, struct Team* home, struct Team* away, CTime* time) {
     //cleans up fonts
     for (const auto& [size, font] : fontStruct->reg) {
         TTF_CloseFont(font);
@@ -97,6 +97,9 @@ void close(struct Window* wn, struct Font* fontStruct, struct Team* home, struct
     //destroys textures associated with away team
     away->texture.destroy();
     away->score.destroyText();
+
+    //destroys the time texts
+    time->destroyTextures();
     
     //cleans up window and renderer
     SDL_DestroyRenderer(wn->renderer);
@@ -313,6 +316,9 @@ int main(int argc, char* args[]) {
     apotek.narrow = loadFont("assets/fonts/Apotek_Narrow.otf", &exitCode);
     apotek.comp = loadFont("assets/fonts/Apotek_Comp.otf", &exitCode);
 
+    //sets up time
+    CTime timeObj{ window.renderer, apotek };
+
     if (exitCode == 0) {
         bool quit{ false };
 
@@ -336,9 +342,6 @@ int main(int argc, char* args[]) {
             away.texture.loadFromFile(filePath, window.renderer);
         }
 
-        //sets up time
-        CTime time{window.renderer, apotek};
-
         //gets frame rate and sets up limiting
         float FPS = getFrameRate(window.window);
 
@@ -361,23 +364,23 @@ int main(int argc, char* args[]) {
                     switch (e.key.key) {
                         //pauses
                     case SDLK_SPACE:
-                        time.pause(window.renderer, apotek);
+                        timeObj.pause(window.renderer, apotek);
                         break;
 
                         //home scoring
                     case SDLK_G:
-                        handleScoring(&time, &home, true, window.renderer, apotek);
+                        handleScoring(&timeObj, &home, true, window.renderer, apotek);
                         break;
                     case SDLK_H:
-                        handleScoring(&time, &home, false, window.renderer, apotek);
+                        handleScoring(&timeObj, &home, false, window.renderer, apotek);
                         break;
 
                         //away scoring
                     case SDLK_V:
-                        handleScoring(&time, &away, true, window.renderer, apotek);
+                        handleScoring(&timeObj, &away, true, window.renderer, apotek);
                         break;
                     case SDLK_B:
-                        handleScoring(&time, &away, false, window.renderer, apotek);
+                        handleScoring(&timeObj, &away, false, window.renderer, apotek);
                         break;
                     }
                 }
@@ -386,16 +389,16 @@ int main(int argc, char* args[]) {
             SDL_SetRenderDrawColor(window.renderer, bgCol.r, bgCol.g, bgCol.b, bgCol.a);
             SDL_RenderClear(window.renderer);
 
-            time.update(window.renderer);
+            timeObj.update(window.renderer);
 
             //renders active menu
-            scoreboard(window.renderer, screenDim, scoreboardSize, apotek, &home, &away, &time, clash);
+            scoreboard(window.renderer, screenDim, scoreboardSize, apotek, &home, &away, &timeObj, clash);
 
             //refresh screen
             SDL_RenderPresent(window.renderer);
         }
     }
 
-    close(&window, &apotek, &home, &away);
+    close(&window, &apotek, &home, &away, &timeObj);
     return exitCode;
 }

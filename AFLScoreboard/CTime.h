@@ -31,6 +31,7 @@ public:
 
     void renderTime(SDL_Renderer* renderer, screenDimensions dim, screenDimensions size);
     void setTimeMode(timeMode mode);
+    void destroyTextures();
 
 private:
     Uint64 timePassed;
