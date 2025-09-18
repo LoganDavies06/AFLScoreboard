@@ -32,24 +32,11 @@ public:
     //Remove move assignment
     CTexture& operator=( CTexture&& ) = delete;
 
-    //Loads texture from disk
-    bool loadFromFile( std::string path, SDL_Renderer* gRenderer);
-    bool loadFromFile( std::string path, SDL_Renderer* gRenderer, int maskR, int maskG, int maskB );
-
     //Cleans up texture
     void destroy();
 
     void setPosition(float pX, float pY);
     void setCentre(float pX, float pY);
-
-    //Sets color modulation
-    void setColor( Uint8 r, Uint8 g, Uint8 b);
-
-    //Sets opacity
-    void setAlpha( Uint8 alpha );
-
-    //Sets blend mode
-    void setBlending( SDL_BlendMode blendMode );
 
     //Draws texture
     void render( SDL_Renderer* gRenderer, SDL_FRect* clip = nullptr, float width = kDefaultSize, float height = kDefaultSize, double degrees = 0.0, SDL_FPoint* center = nullptr, SDL_FlipMode flipMode = SDL_FLIP_NONE );
@@ -71,4 +58,20 @@ protected:
     //Texture dimensions
     int mWidth;
     int mHeight;
+};
+
+class CImage : public CTexture {
+public:
+    //Loads texture from disk
+    bool loadFromFile(std::string path, SDL_Renderer* gRenderer);
+    bool loadFromFile(std::string path, SDL_Renderer* gRenderer, int maskR, int maskG, int maskB);
+
+    //Sets color modulation
+    void setColor(Uint8 r, Uint8 g, Uint8 b);
+
+    //Sets opacity
+    void setAlpha(Uint8 alpha);
+
+    //Sets blend mode
+    void setBlending(SDL_BlendMode blendMode);
 };

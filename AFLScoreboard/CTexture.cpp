@@ -39,7 +39,7 @@ CTexture::~CTexture()
 }
 
 //load without colour keying
-bool CTexture::loadFromFile( std::string path, SDL_Renderer* gRenderer )
+bool CImage::loadFromFile( std::string path, SDL_Renderer* gRenderer )
 {
     //Clean up texture if it already exists
     destroy();
@@ -71,7 +71,7 @@ bool CTexture::loadFromFile( std::string path, SDL_Renderer* gRenderer )
     return mTexture != nullptr;
 }
 //load with colour keying
-bool CTexture::loadFromFile( std::string path, SDL_Renderer* gRenderer, int keyR, int keyG, int keyB )
+bool CImage::loadFromFile( std::string path, SDL_Renderer* gRenderer, int keyR, int keyG, int keyB )
 {
     //Clean up texture if it already exists
     destroy();
@@ -128,15 +128,15 @@ void CTexture::setCentre(float pX, float pY) {
     y = pY - mHeight/2.f;
 }
 
-void CTexture::setColor( Uint8 r, Uint8 g, Uint8 b){
+void CImage::setColor( Uint8 r, Uint8 g, Uint8 b){
     SDL_SetTextureColorMod( mTexture, r, g, b );
 }
 
-void CTexture::setAlpha( Uint8 alpha ){
+void CImage::setAlpha( Uint8 alpha ){
     SDL_SetTextureAlphaMod( mTexture, alpha );
 }
 
-void CTexture::setBlending( SDL_BlendMode blendMode ){
+void CImage::setBlending( SDL_BlendMode blendMode ){
     SDL_SetTextureBlendMode( mTexture, blendMode );
 }
 
